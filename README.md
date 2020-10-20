@@ -3,12 +3,15 @@
 ## Overview
 
 For Zabbix version: 5.0
+
 This template-set monitors an IPFire appliance/instance and supports monitoring of:
 - IPFire general stats (Available entropy, state of RNG)
 - IPFire services (default IPFire services and possible Addon services)
 - Pakfire status (Installed version, Available update(s))
 - Network stats (Line quality, Open Connections, Firewall hits)
+
 Use in conjunction with a default Template OS Linux-template for CPU/Memory/Storage monitoring of the IPFire appliance/instance.
+
 Also an extra Zabbix agent userparameter is included to support `vfs.dev.discovery` on Zabbix agent <4.4 as IPFire currently ships with Zabbix agent v4.2. Install this userparameter to enable the Template Module Linux block devices-template included with Zabbix Server 4.4+ to monitor block device performance.
 
 This template was tested on:
@@ -39,11 +42,15 @@ No specific Zabbix configuration is required
 |{$IPFIRE.SERVICE.TRIGGER} |<p>Whether Zabbix needs to trigger when an IPFire service is down. This variable can be used with context to exclude specific services.</p>|`1` |
 
 This template does not 'detect' if you have manually disabled a service in IPFire, so by default it will alarm you when any service is down. This is done on purpose so that you will also be notified if a service is unintentionly disabled.
-To disable the trigger for a specific service (because it is disabled or you just don't want notifications about that service) add a host macro `{$IPFIRE.SERVICE.TRIGGER:"<service>"}` to the IPFire host and set it to `0`. For example to disable the OpenVPN service trigger add `{$IPFIRE.SERVICE.TRIGGER:"openvpn"}` to the host. Check the discovered IPFire service item-keys for the correct service-name of each service.
+
+To disable the trigger for a specific service (because it is disabled or you just don't want notifications about that service) add a host macro `{$IPFIRE.SERVICE.TRIGGER:"<service>"}` to the IPFire host and set it to `0`. 
+
+For example to disable the OpenVPN service trigger add `{$IPFIRE.SERVICE.TRIGGER:"openvpn"}` to the host. Check the discovered IPFire service item-keys for the correct service-name of each service.
 
 ## Credits
 
 [Alexander Koch](https://community.ipfire.org/t/looking-for-the-zabbix-agent-template/1459/2) for the app Pakfire template.
+
 [IPFire Team](https://www.ipfire.org) for the IPFire services.cgi script which is used as a base for the ipfire_services.pl script included here.
 
 ## Feedback
