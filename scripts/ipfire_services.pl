@@ -160,7 +160,7 @@ sub addonservicestats{
         my $pid = '';
         my $testcmd = '';
         my $exename;
-        my @memory;
+        my @memory = (0);
 
         $testcmd = `sudo /usr/local/bin/addonctrl $_ status 2>/dev/null`;
 
@@ -194,4 +194,3 @@ sub addonservicestats{
         }
         return $status;
 }
-
