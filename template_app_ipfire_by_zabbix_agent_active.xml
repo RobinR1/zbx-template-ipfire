@@ -457,6 +457,14 @@ Created by Robin Roevens (robin.roevens (at) disroot.org)</description>
                             <name>IPFire Status</name>
                         </application>
                     </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}&lt;{$IPFIRE.ENTROPY.MIN}</expression>
+                            <name>System is low on entropy</name>
+                            <priority>WARNING</priority>
+                            <description>The system has less than {$IPFIRE.ENTROPY.MIN} bits of entropy available.</description>
+                        </trigger>
+                    </triggers>
                 </item>
                 <item>
                     <name>Random Number Generator Daemon</name>
@@ -474,6 +482,13 @@ Created by Robin Roevens (robin.roevens (at) disroot.org)</description>
                     </valuemap>
                 </item>
             </items>
+            <macros>
+                <macro>
+                    <macro>{$IPFIRE.ENTROPY.MIN}</macro>
+                    <value>128</value>
+                    <description>Minimal required entropy</description>
+                </macro>
+            </macros>
         </template>
         <template>
             <template>Template Module IPFire Network stats by Zabbix Agent Active</template>
@@ -792,6 +807,14 @@ Created by Robin Roevens (robin.roevens (at) disroot.org)</description>
             </macros>
         </template>
     </templates>
+    <triggers>
+        <trigger>
+            <expression>{Template Module IPFire General stats by Zabbix Agent Active:vfs.file.contents[&quot;/proc/cpuinfo&quot;].last()}=1 and {Template Module IPFire General stats by Zabbix Agent Active:vfs.file.exists[&quot;/var/run/rngd.pid&quot;].last()}&lt;&gt;1</expression>
+            <name>Random Number Generator Daemon is not running</name>
+            <priority>WARNING</priority>
+            <description>A hardware random number source is found but the random number generator daemon is not running to inject randomness from the hardware into the kernel entropy pool.</description>
+        </trigger>
+    </triggers>
     <graphs>
         <graph>
             <name>Entropy</name>
