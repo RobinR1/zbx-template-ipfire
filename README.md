@@ -21,6 +21,7 @@ This template was tested on:
 ## Setup
 
 - Install IPFire addon `zabbix_agentd` using Pakfire
+- Install IPFire addon `fping` using Pakfire
 - Remove `userparameter_pakfire.conf` from the folder with Zabbix agent configuration, if it exists.
 - Copy 
   - `template_app_pakfire.conf`
@@ -28,7 +29,7 @@ This template was tested on:
   - `template_module_ipfire_services.conf`
   - optional: `template_module_linux_block_devices.conf` - if Zabbix agent version is <4.4 but you use Template OS Linux from Zabbix Server 4.4+.
   into the folder with Zabbix agent configuration (`/etc/zabbix_agentd/zabbix_agentd.d/` by default on IPFire)
-- Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/zabbix_agentd.d` by default on IPFire) and make it executable for user `zabbix`.
+- Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` by default on IPFire) and make it executable for user `zabbix`.
 - Copy `zabbix` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run pakfire status, addonctrl and iptables as root user.
 - Restart Zabbix agent.
 
@@ -40,7 +41,9 @@ No specific Zabbix configuration is required
 |Name|Description|Default|
 |----|-----------|-------|
 |{$IPFIRE.SERVICE.TRIGGER} |<p>Whether Zabbix needs to trigger when an IPFire service is down. This variable can be used with context to exclude specific services.</p>|`1` |
+|{$IPFIRE.ENTROPY.MIN} |<p>Minimal required entropy</p>|`128` |
 
+#### Notes about $IPFIRE.SERVICE.TRIGGER
 This template does not 'detect' if you have manually disabled a service in IPFire, so by default it will alarm you when any service is down. This is done on purpose so that you will also be notified if a service is unintentionly disabled.
 
 To disable the trigger for a specific service (because it is disabled or you just don't want notifications about that service) add a host macro `{$IPFIRE.SERVICE.TRIGGER:"<service>"}` to the IPFire host and set it to `0`. 
