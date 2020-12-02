@@ -30,7 +30,7 @@ This template was tested on:
   - optional: `template_module_linux_block_devices.conf` - if Zabbix agent version is <4.4 but you use Template OS Linux from Zabbix Server 4.4+.
   into the folder with Zabbix agent configuration (`/etc/zabbix_agentd/zabbix_agentd.d/` by default on IPFire)
 - Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` by default on IPFire) and make it executable for user `zabbix`.
-- Copy `zabbix` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run pakfire status, addonctrl and iptables as root user.
+- Copy `zabbix` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `pakfire status`, `addonctrl`, `iptables` and `fping` as root user.
 - Restart Zabbix agent.
 
 ## Zabbix configuration
