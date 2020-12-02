@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2020-10-20T08:48:14Z</date>
+    <date>2020-12-02T13:18:16Z</date>
     <groups>
         <group>
             <name>Templates/Applications</name>
@@ -18,9 +18,10 @@
 &#13;
 Requirements for template operation:&#13;
 1.Install Zabbix agent addon using Pakfire&#13;
-2.Copy zabbix sudoers-file into folder with sudoers configuration (/etc/sudoers.d by default)&#13;
-3.Copy ipfire_services.pl into folder with Zabbix agent scripts (/etc/zabbix_agentd/scripts by default on IPFire) and make sure it is executable by the zabbix user.&#13;
-3.Copy &#13;
+2.Install fping addon using Pakfire&#13;
+3.Copy zabbix sudoers-file into folder with sudoers configuration (/etc/sudoers.d by default)&#13;
+4.Copy ipfire_services.pl into folder with Zabbix agent scripts (/etc/zabbix_agentd/scripts by default on IPFire) and make sure it is executable by the zabbix user.&#13;
+5.Copy &#13;
   - template_module_ipfire_network_stats.conf&#13;
   - template_module_ipfire_services.conf&#13;
   - template_app_pakfire.conf&#13;
@@ -602,6 +603,29 @@ Created by Robin Roevens (robin.roevens (at) disroot.org)</description>
                             <params/>
                         </step>
                     </preprocessing>
+                </item>
+                <item>
+                    <name>Gateway available</name>
+                    <type>ZABBIX_ACTIVE</type>
+                    <key>ipfire.net.gateway.ping</key>
+                    <history>7d</history>
+                    <description>Checks if the internet gateway on RED is reachable</description>
+                    <applications>
+                        <application>
+                            <name>Network</name>
+                        </application>
+                    </applications>
+                    <valuemap>
+                        <name>Boolean Yes/No</name>
+                    </valuemap>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}&lt;&gt;1</expression>
+                            <name>Internet Gateway is not reachable</name>
+                            <priority>HIGH</priority>
+                            <description>Internet Gateway on interface RED is unreachable. Internet connection is lost or intermittent.</description>
+                        </trigger>
+                    </triggers>
                 </item>
                 <item>
                     <name>Gateway ping timings</name>
