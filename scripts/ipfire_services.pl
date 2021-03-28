@@ -3,7 +3,7 @@
 use strict;
 
 # enable only the following on debugging purpose
-use warnings;
+# use warnings;
 
 # Maps a nice printable name to the changing part of the pid file, which
 # is also the name of the program
@@ -22,7 +22,7 @@ my %servicenames =(
         'OpenVPN' => 'openvpn'
 );
 
-# Hash to overwrite the process name of a process if it differs fromt the launch command.
+# Hash to overwrite the process name of a process if it differs from the launch command.
 my %overwrite_exename_hash = (
         "suricata" => "Suricata-Main"
 );
