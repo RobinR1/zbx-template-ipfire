@@ -41,6 +41,9 @@ Created by Robin Roevens (robin.roevens (at) disroot.org)</description>
                 <template>
                     <name>Template Module IPFire Services by Zabbix Agent Active</name>
                 </template>
+                <template>
+                    <name>Template Module IPFire DHCP Clients by Zabbix Agent Active</name>
+                </template>
             </templates>
             <groups>
                 <group>
@@ -790,6 +793,48 @@ Created by Robin Roevens (robin.roevens (at) disroot.org)</description>
                     <description>Whether we need to trigger when a service is down. This variable can be used with context to exclude specific services.</description>
                 </macro>
             </macros>
+        </template>
+        <template>
+            <uuid>85fea82fd2be4f5fb7e0ba93e268f5a6</uuid>
+            <template>Template Module IPFire DHCP Clients by Zabbix Agent Active</template>
+            <name>Template Module IPFire DHCP Clients by Zabbix Agent Active</name>
+            <description>Monitor DHCP clients of IPFire Services
+Created by Stack Korora ( stackkorora (at) disroot.org )</description>
+            <groups>
+                <group>
+                    <name>Templates/Modules</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>437fe278f4984f42917039aff8fd6c28</uuid>
+                    <name>IPFire Captive Portal Clients</name>
+                    <type>ZABBIX_ACTIVE</type>
+                    <key>ipfire.captive.clients</key>
+                    <history>1d</history>
+                    <description>Number of active users on captive portal</description>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>IPFire Captive Portal</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>0e8d3a7d6c1a4224b388bdcbb4c31eb7</uuid>
+                    <name>IPFire DHCPd Leases</name>
+                    <type>ZABBIX_ACTIVE</type>
+                    <key>ipfire.dhcp.clients</key>
+                    <history>1d</history>
+                    <description>Number of active dhcpd leases on captive portal</description>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>IPFire DHCPd Leases</value>
+                        </tag>
+                    </tags>
+                </item>
+            </items>
         </template>
     </templates>
     <graphs>
