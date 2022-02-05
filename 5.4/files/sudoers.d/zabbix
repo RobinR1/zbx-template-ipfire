@@ -14,4 +14,4 @@
 # Append / edit the following list of commands to fit your needs:
 #
 Defaults:zabbix !requiretty
-zabbix ALL=(ALL) NOPASSWD: /opt/pakfire/pakfire status, /usr/local/bin/addonctrl, /sbin/iptables, /usr/sbin/fping
+zabbix ALL=(ALL) NOPASSWD: /opt/pakfire/pakfire status, /usr/local/bin/addonctrl, /usr/sbin/fping, /usr/local/bin/getipstat
