@@ -2,7 +2,7 @@
 
 ## Overview
 
-For Zabbix version: 5.0
+For Zabbix version: 5.4
 
 This template-set monitors an IPFire appliance/instance and supports monitoring of:
 - IPFire general stats (Available entropy, state of RNG)
@@ -16,7 +16,7 @@ Also an extra Zabbix agent userparameter is included to support `vfs.dev.discove
 
 This template was tested on:
 
-- IPFire 2.25 - Core update 150, but should work on earlier versions
+- IPFire 2.27 - Core update 162, but should work on earlier versions
 
 ## Setup
 
@@ -24,13 +24,13 @@ This template was tested on:
 - Install IPFire addon `fping` using Pakfire
 - Remove `userparameter_pakfire.conf` from the folder with Zabbix agent configuration, if it exists.
 - Copy 
-  - `template_app_pakfire.conf`
-  - `template_module_ipfire_network_stats.conf`
-  - `template_module_ipfire_services.conf`
-  - optional: `template_module_linux_block_devices.conf` - if Zabbix agent version is <4.4 but you use Template OS Linux from Zabbix Server 4.4+.
+  - `template_pakfire.conf`
+  - `template_ipfire_network_stats.conf`
+  - `template_ipfire_services.conf`
+  - optional: `userparameter_linux_block_devices.conf` - if Zabbix agent version is <4.4 but you use Template OS Linux from Zabbix Server 4.4+.
   into the folder with Zabbix agent configuration (`/etc/zabbix_agentd/zabbix_agentd.d/` by default on IPFire)
 - Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` by default on IPFire) and make it executable for user `zabbix`.
-- Copy `zabbix` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `pakfire status`, `addonctrl`, `iptables` and `fping` as root user.
+- Copy `zabbix` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `pakfire status`, `addonctrl`, `getipstat` and `fping` as root user.
 - Restart Zabbix agent.
 
 ## Zabbix configuration
@@ -40,8 +40,14 @@ No specific Zabbix configuration is required
 ### Macros used
 |Name|Description|Default|
 |----|-----------|-------|
-|{$IPFIRE.SERVICE.TRIGGER} |<p>Whether Zabbix needs to trigger when an IPFire service is down. This variable can be used with context to exclude specific services.</p>|`1` |
+|{$IPFIRE.CONN_MAX} |<p>Max percentage of max open connections used before triggering warning</p>|`95` |
+|{$IPFIRE.CONN_MAX_RESOLVE} |<p>Percentage of max open connections used before resolving trigger</p>|`85` |
 |{$IPFIRE.ENTROPY.MIN} |<p>Minimal required entropy</p>|`128` |
+|{$IPFIRE.FW_CHAIN.MATCHES} |<p>Only discover firewall chains matching this regex</p>|`^.*$` |
+|{$IPFIRE.FW_CHAIN.NOT_MATCHES} |<p>Do not discover firewall chains matching this regex</p>|`CHANGE_IF_NEEDED` |
+|{$IPFIRE.SERVICE.TRIGGER} |<p>Whether Zabbix needs to trigger when an IPFire service is down. This variable can be used with context to exclude specific services.</p>|`1` |
+|{$IPFIRE.SERVICENAME.MATCHES} |<p>All services matching this regex will be discovered</p>|`^.*$` |
+|{$IPFIRE.SERVICENAME.NOT_MATCHES} |<p>Services matching this regex will not be discovered</p>|`CHANGE_IF_NEEDED` |
 
 #### Notes about $IPFIRE.SERVICE.TRIGGER
 This template does not 'detect' if you have manually disabled a service in IPFire, so by default it will alarm you when any service is down. This is done on purpose so that you will also be notified if a service is unintentionly disabled.
@@ -49,6 +55,9 @@ This template does not 'detect' if you have manually disabled a service in IPFir
 To disable the trigger for a specific service (because it is disabled or you just don't want notifications about that service) add a host macro `{$IPFIRE.SERVICE.TRIGGER:"<service>"}` to the IPFire host and set it to `0`. 
 
 For example to disable the OpenVPN service trigger add `{$IPFIRE.SERVICE.TRIGGER:"openvpn"}` to the host. Check the discovered IPFire service item-keys for the correct service-name of each service.
+
+Or you could opt to use the variables `{$IPFIRE.SERVICENAME.MATCHES}` and/or `{$IPFIRE.SERVICENAME.NOT_MATCHES}` to filter out services
+you don't want to be monitored at all.
 
 ## Credits
 
