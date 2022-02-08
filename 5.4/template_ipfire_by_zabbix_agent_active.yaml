@@ -203,7 +203,7 @@ zabbix_export:
           uuid: 526aa253dee84833818a57efff79c9b1
           name: 'DHCP Server Leases'
           type: ZABBIX_ACTIVE
-          key: ipfire.dhcp.clients
+          key: ipfire.dhcpd.clients
           history: 7d
           description: 'Number of active dhcpd leases'
           tags:
