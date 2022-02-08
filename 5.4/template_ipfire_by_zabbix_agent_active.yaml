@@ -1,6 +1,6 @@
 zabbix_export:
   version: '5.4'
-  date: '2022-02-05T00:27:03Z'
+  date: '2022-02-08T20:01:39Z'
   groups:
     -
       uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
@@ -48,11 +48,33 @@ zabbix_export:
       description: |
         Monitor some IPFire general statistics
         
-        Created by Robin Roevens (robin.roevens (at) disroot.org)
+        Created by 
+         - Robin Roevens (robin.roevens (at) disroot.org)
+         - Stack Korora ( stackkorora (at) disroot.org )
       groups:
         -
           name: Templates/Modules
       items:
+        -
+          uuid: 3bec1fcf45174a0da4b701036a09beb1
+          name: 'Captive Portal Clients'
+          type: ZABBIX_ACTIVE
+          key: ipfire.captive.clients
+          history: 7d
+          description: 'Number of active users on captive portal'
+          tags:
+            -
+              tag: resource
+              value: captive_portal
+            -
+              tag: target
+              value: ipfire
+            -
+              tag: transport
+              value: agent
+            -
+              tag: type
+              value: gauge
         -
           uuid: ceef42e546444e75a4086bb71a30fc88
           name: 'RDRAND hardware support'
@@ -170,11 +192,33 @@ zabbix_export:
       description: |
         Monitors IPFire network and firewall statistics.
         
-        Created by Robin Roevens (robin.roevens (at) disroot.org)
+        Created by 
+         - Robin Roevens (robin.roevens (at) disroot.org)
+         - Stack Korora ( stackkorora (at) disroot.org )
       groups:
         -
           name: Templates/Modules
       items:
+        -
+          uuid: 526aa253dee84833818a57efff79c9b1
+          name: 'DHCP Server Leases'
+          type: ZABBIX_ACTIVE
+          key: ipfire.dhcp.clients
+          history: 7d
+          description: 'Number of active dhcpd leases'
+          tags:
+            -
+              tag: resource
+              value: dhcpd
+            -
+              tag: target
+              value: ipfire
+            -
+              tag: transport
+              value: agent
+            -
+              tag: type
+              value: gauge
         -
           uuid: 9db4a6ab3fb74d98b947ceda614e1b87
           name: 'Get firewall hits'
