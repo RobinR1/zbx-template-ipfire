@@ -12,25 +12,21 @@ This template-set monitors an IPFire appliance/instance and supports monitoring 
 
 Use in conjunction with a default Template OS Linux-template for CPU/Memory/Storage monitoring of the IPFire appliance/instance.
 
-Also an extra Zabbix agent userparameter is included to support `vfs.dev.discovery` on Zabbix agent <4.4 as IPFire currently ships with Zabbix agent v4.2. Install this userparameter to enable the Template Module Linux block devices-template included with Zabbix Server 4.4+ to monitor block device performance.
+This template was created for:
 
-This template was tested on:
+- IPFire 2.27 - Core update 170
 
-- IPFire 2.27 - Core update 162, but should work on earlier versions
+**Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
+Use [https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1](v0.1) of this template for older versions of IPFire.
 
 ## Setup
 
 - Install IPFire addon `zabbix_agentd` using Pakfire
-- Install IPFire addon `fping` using Pakfire
 - Remove `userparameter_pakfire.conf` from the folder with Zabbix agent configuration, if it exists.
-- Copy 
-  - `template_pakfire.conf`
-  - `template_ipfire_network_stats.conf`
-  - `template_ipfire_services.conf`
-  - optional: `userparameter_linux_block_devices.conf` - if Zabbix agent version is <4.4 but you use Template OS Linux from Zabbix Server 4.4+.
-  into the folder with Zabbix agent configuration (`/etc/zabbix_agentd/zabbix_agentd.d/` by default on IPFire)
-- Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` by default on IPFire) and make it executable for user `zabbix`.
-- Copy `zabbix` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `pakfire status`, `addonctrl`, `getipstat` and `fping` as root user.
+- Make sure the IPFire builtin specific userparameters are enabled in `/etc/zabbix_agentd/zabbix_agentd.conf` (which should be by default)
+- Copy `template_ipfire_services.conf` into the folder with Zabbix agent configuration (`/etc/zabbix_agentd/zabbix_agentd.d/` on IPFire)
+- Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` on IPFire) and make it executable for user `zabbix`.
+- Copy `zabbix_agentd_user` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `addonctrl` as root user.
 - Restart Zabbix agent.
 
 ## Zabbix configuration
@@ -63,7 +59,7 @@ you don't want to be monitored at all.
 
 [Alexander Koch](https://community.ipfire.org/t/looking-for-the-zabbix-agent-template/1459/2) for the app Pakfire template.
 
-[IPFire Team](https://www.ipfire.org) for the IPFire services.cgi script which is used as a base for the ipfire_services.pl script included here.
+[IPFire Team](https://www.ipfire.org) for the IPFire distro and for accepting my contributions to allow easier/better monitoring using Zabbix Agent.
 
 ## Feedback
 
