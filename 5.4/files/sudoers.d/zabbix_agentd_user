@@ -11,7 +11,5 @@
 # - Append the full path incl. parameters to each command, using "," as separator.
 # - Only add commands you really need. Zabbix should not have more rights than it has to.
 #
-# Append / edit the following list of commands to fit your needs:
-#
-Defaults:zabbix !requiretty
-zabbix ALL=(ALL) NOPASSWD: /opt/pakfire/pakfire status, /usr/local/bin/addonctrl, /usr/sbin/fping, /usr/local/bin/getipstat
+
+zabbix ALL=(ALL) NOPASSWD: /etc/zabbix_agentd/scripts/ipfire_services.pl
