@@ -17,7 +17,8 @@ This template was created for:
 - IPFire 2.27 - Core update 170
 
 **Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
-Use [https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1](v0.1) of this template for older versions of IPFire.
+
+Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of this template for older versions of IPFire.
 
 ## Setup
 
