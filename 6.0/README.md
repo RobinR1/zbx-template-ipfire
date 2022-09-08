@@ -2,10 +2,10 @@
 
 ## Overview
 
-For Zabbix version: 5.4
+For Zabbix version: 6.0
 
 This template-set monitors an IPFire appliance/instance and supports monitoring of:
-- IPFire general stats (Available entropy, state of RNG)
+- IPFire general stats (Number of current DHCPd clients)
 - IPFire services (default IPFire services and possible Addon services)
 - Pakfire status (Installed version, Available update(s))
 - Network stats (Line quality, Open Connections, Firewall hits)
