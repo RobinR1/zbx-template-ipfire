@@ -39,7 +39,6 @@ No specific Zabbix configuration is required
 |----|-----------|-------|
 |{$IPFIRE.CONN_MAX} |<p>Max percentage of max open connections used before triggering warning</p>|`95` |
 |{$IPFIRE.CONN_MAX_RESOLVE} |<p>Percentage of max open connections used before resolving trigger</p>|`85` |
-|{$IPFIRE.ENTROPY.MIN} |<p>Minimal required entropy</p>|`128` |
 |{$IPFIRE.FW_CHAIN.MATCHES} |<p>Only discover firewall chains matching this regex</p>|`^.*$` |
 |{$IPFIRE.FW_CHAIN.NOT_MATCHES} |<p>Do not discover firewall chains matching this regex</p>|`CHANGE_IF_NEEDED` |
 |{$IPFIRE.SERVICE.TRIGGER} |<p>Whether Zabbix needs to trigger when an IPFire service is down. This variable can be used with context to exclude specific services.</p>|`1` |

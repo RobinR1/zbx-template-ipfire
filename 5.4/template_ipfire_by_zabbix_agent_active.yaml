@@ -1,6 +1,6 @@
 zabbix_export:
   version: '5.4'
-  date: '2022-02-08T20:01:39Z'
+  date: '2022-09-08T20:52:27Z'
   groups:
     -
       uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
@@ -75,116 +75,6 @@ zabbix_export:
             -
               tag: type
               value: gauge
-        -
-          uuid: ceef42e546444e75a4086bb71a30fc88
-          name: 'RDRAND hardware support'
-          type: ZABBIX_ACTIVE
-          key: 'vfs.file.contents["/proc/cpuinfo"]'
-          delay: 1h
-          history: 7d
-          description: 'Check if hardware has rdrand support.'
-          valuemap:
-            name: 'Boolean Yes/No'
-          preprocessing:
-            -
-              type: REGEX
-              parameters:
-                - rdrand
-                - '1'
-              error_handler: CUSTOM_VALUE
-              error_handler_params: '0'
-          tags:
-            -
-              tag: resource
-              value: randomness
-            -
-              tag: target
-              value: ipfire
-            -
-              tag: transport
-              value: agent
-            -
-              tag: type
-              value: state
-        -
-          uuid: f140858d59d74c218bc76a31691df1c4
-          name: Entropy
-          type: ZABBIX_ACTIVE
-          key: 'vfs.file.contents["/proc/sys/kernel/random/entropy_avail"]'
-          history: 7d
-          tags:
-            -
-              tag: resource
-              value: randomness
-            -
-              tag: target
-              value: ipfire
-            -
-              tag: transport
-              value: agent
-            -
-              tag: type
-              value: gauge
-          triggers:
-            -
-              uuid: 7c76ea43522b451487eef2b7ff36370a
-              expression: 'last(/IPFire General stats by Zabbix Agent Active/vfs.file.contents["/proc/sys/kernel/random/entropy_avail"])<{$IPFIRE.ENTROPY.MIN}'
-              name: 'System is low on entropy'
-              priority: WARNING
-              description: 'The system has less than {$IPFIRE.ENTROPY.MIN} bits of entropy available.'
-        -
-          uuid: 36c13d71b65a4205b6a7e04b8a81fc43
-          name: 'Random Number Generator Daemon'
-          type: ZABBIX_ACTIVE
-          key: 'vfs.file.exists["/var/run/rngd.pid"]'
-          history: 7d
-          description: 'Checks if Random Number Generator Daemon (rngd) is active.'
-          valuemap:
-            name: 'Service state'
-          preprocessing:
-            -
-              type: DISCARD_UNCHANGED_HEARTBEAT
-              parameters:
-                - 1h
-          tags:
-            -
-              tag: resource
-              value: randomness
-            -
-              tag: target
-              value: ipfire
-            -
-              tag: transport
-              value: agent
-            -
-              tag: type
-              value: state
-      macros:
-        -
-          macro: '{$IPFIRE.ENTROPY.MIN}'
-          value: '128'
-          description: 'Minimal required entropy'
-      valuemaps:
-        -
-          uuid: de7d41845c9e41ca86d15a8092181603
-          name: 'Boolean Yes/No'
-          mappings:
-            -
-              value: '0'
-              newvalue: 'No'
-            -
-              value: '1'
-              newvalue: 'Yes'
-        -
-          uuid: 8d3fa6d494e74178b90ebb18af4c0575
-          name: 'Service state'
-          mappings:
-            -
-              value: '0'
-              newvalue: Down
-            -
-              value: '1'
-              newvalue: Up
     -
       uuid: 35c8d311c2d64e7794e88693e741b2cc
       template: 'IPFire Network stats by Zabbix Agent Active'
@@ -802,9 +692,10 @@ zabbix_export:
           triggers:
             -
               uuid: ebf7d76060b44f57b4ad236daaeff5b3
-              expression: '(last(/Pakfire by Zabbix Agent Active/pakfire.core-update-level,#1)<>last(/Pakfire by Zabbix Agent Active/pakfire.core-update-level,#2))=1'
+              expression: 'change(/Pakfire by Zabbix Agent Active/pakfire.core-update-level)>0'
               name: 'Pakfire: Core-Update-Level has changed'
               priority: INFO
+              manual_close: 'YES'
               dependencies:
                 -
                   name: 'Pakfire: Core-Version has changed'
@@ -1141,24 +1032,7 @@ zabbix_export:
       description: |
         The current number of open connections is at {$IPFIRE.CONN.MAX}% of the max allowed number of open connections. When the max allowed number of open connections is reached, new connections will be dropped. 
         Consider increasing the net.netfilter.nf_conntrack_max system variable.
-    -
-      uuid: 1b4170d70b0b4e72874882be4a99d801
-      expression: 'last(/IPFire General stats by Zabbix Agent Active/vfs.file.contents["/proc/cpuinfo"])=1 and last(/IPFire General stats by Zabbix Agent Active/vfs.file.exists["/var/run/rngd.pid"])<>1'
-      name: 'Random Number Generator Daemon is not running'
-      priority: WARNING
-      description: 'A hardware random number source is found but the random number generator daemon is not running to inject randomness from the hardware into the kernel entropy pool.'
   graphs:
-    -
-      uuid: 51c44e0490374cbcb4099a716d69c08a
-      name: Entropy
-      graph_items:
-        -
-          sortorder: '1'
-          drawtype: BOLD_LINE
-          color: FF0000
-          item:
-            host: 'IPFire General stats by Zabbix Agent Active'
-            key: 'vfs.file.contents["/proc/sys/kernel/random/entropy_avail"]'
     -
       uuid: 0a5b32395b924093b18fdda2123b1aaa
       name: 'Line Quality'
