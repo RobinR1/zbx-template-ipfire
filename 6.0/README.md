@@ -26,9 +26,24 @@ Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of t
 - Remove `userparameter_pakfire.conf` from the folder with Zabbix agent configuration, if it exists.
 - Make sure the IPFire builtin specific userparameters are enabled in `/etc/zabbix_agentd/zabbix_agentd.conf` (which should be by default)
 - Copy `template_ipfire_services.conf` into the folder with Zabbix agent configuration (`/etc/zabbix_agentd/zabbix_agentd.d/` on IPFire)
-- Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` on IPFire) and make it executable for user `zabbix`.
-- Copy `zabbix_agentd_user` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `addonctrl` as root user.
+- Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` on IPFire) and make it executable for user `root`.
+- Unless you have your own custom sudoers config for zabbix; Copy `zabbix_agentd_user` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `ipfire_services.pl` as root user.
+  Otherwise, make sure the contents of `zabbix_agentd_user` from this template are added to your custom `/etc/sudoers.d/zabbix_agentd_user` file.
 - Restart Zabbix agent.
+
+### Upgrade from v0.1
+
+Since IPFire Core update 170, most of the custom userparameters are now implemented in the zabbix_agentd addon so the ones included with v0.1 of this template should be removed from `/etc/zabbix_agentd/zabbis_agentd.d/`:
+
+- Make sure you are running Core Update 170 and have `zabbix_agentd` addon 6.0.6 or higher installed
+- Remove these files from `/etc/zabbix_agentd/zabbix_agentd.d/`:
+  - `template_app_pakfire.conf`
+  - `template_module_ipfire_network_stats.conf`
+  - `template_module_ipfire_services.conf` - This file is actually renamed in newer versions of this template
+  - `template_module_linux_block_devices.conf`
+
+Now you can perform the setup steps described above to install the new version of this template.
+Note: The sudoers file `/etc/sudoers.d/zabbix` (custom or from v0.1 of this template) was automatically renamed to `/etc/sudoers.d/zabbix_agentd_user` by the IPFire `zabbix_agentd` addon upgrade. If you choose not to overwrite this file due to custom changes to it; make sure you do remove the commands that where added for [v0.1](https://github.com/RobinR1/zbx-template-ipfire/blob/0.1/sudoers.d/zabbix).
 
 ## Zabbix configuration
 
