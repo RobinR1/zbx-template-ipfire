@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2022-09-08T20:52:27Z'
+  date: '2022-09-17T23:37:41Z'
   groups:
     -
       uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
@@ -18,14 +18,9 @@ zabbix_export:
         
         Requirements for template operation:
         1.Install Zabbix agent addon using Pakfire
-        2.Install fping addon using Pakfire
-        3.Copy zabbix sudoers-file into folder with sudoers configuration (/etc/sudoers.d by default)
-        4.Copy ipfire_services.pl into folder with Zabbix agent scripts (/etc/zabbix_agentd/scripts by default on IPFire) and make sure it is executable by the zabbix user.
-        5.Copy 
-          - template_ipfire_network_stats.conf
-          - template_ipfire_services.conf
-          - template_pakfire.conf
-          into folder with Zabbix agent configuration (/etc/zabbix_agentd/zabbix_agentd.d/ by default on IPFire). 
+        2.Copy zabbix_agentd_user sudoers-file into /etc/sudoers.d
+        3.Copy ipfire_services.pl into /etc/zabbix_agentd/scripts and make sure it is executable by the root user.
+        4.Copy  template_ipfire_services.conf into /etc/zabbix_agentd/zabbix_agentd.d/. 
         Don't forget to restart zabbix-agent.
         
         Created by Robin Roevens (robin.roevens (at) disroot.org)
@@ -1005,10 +1000,6 @@ zabbix_export:
               name: 'Pakfire: Last server-list update > 49h ago'
               priority: WARNING
               description: 'Auslösung bei Delta > 49h / Recovery bei Delta < 1h'
-      tags:
-        -
-          tag: Service
-          value: Pakfire
       valuemaps:
         -
           uuid: ff125c88f89c4d2eb753b684d1bc7fe3
