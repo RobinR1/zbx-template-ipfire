@@ -1,4 +1,4 @@
-# Template App IPFire by Zabbix Agent Active
+# IPFire by Zabbix Agent Active
 
 ## Overview
 
@@ -41,7 +41,8 @@ Since IPFire Core update 170, most of the custom userparameters are now implemen
   - `template_module_ipfire_services.conf` - This file is actually renamed in newer versions of this template
   - `template_module_linux_block_devices.conf`
 
-Now you can perform the setup steps described above to install the new version of this template.
+Now you can perform the setup steps described above to install the new version of this template. Note however that this template used to be a set of templates which are now merged and renamed (removing 'Template App' from the name) to be in line with the latest [Zabbix template guidelines](https://www.zabbix.com/documentation/guidelines/en/thosts/configuration). You will have to manually remove the old template set and assign your IPFire host(s) to this new template.
+
 Note: The sudoers file `/etc/sudoers.d/zabbix` (custom or from v0.1 of this template) was automatically renamed to `/etc/sudoers.d/zabbix_agentd_user` by the IPFire `zabbix_agentd` addon upgrade. If you choose not to overwrite this file due to custom changes to it; make sure you do remove the commands that where added for [v0.1](https://github.com/RobinR1/zbx-template-ipfire/blob/0.1/sudoers.d/zabbix).
 
 ## Zabbix configuration
