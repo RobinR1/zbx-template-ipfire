@@ -22,7 +22,7 @@ Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of t
 
 ## Setup
 
-- Install IPFire addon `zabbix_agentd` using Pakfire
+- Install and configure [IPFire addon `zabbix_agentd`](https://wiki.ipfire.org/addons/zabbix_agentd) using Pakfire
 - Make sure the IPFire builtin specific userparameters are enabled in `/etc/zabbix_agentd/zabbix_agentd.conf` (which should be by default)
 - Copy `template_ipfire_services.conf` into the folder with Zabbix agent configuration (`/etc/zabbix_agentd/zabbix_agentd.d/` on IPFire)
 - Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` on IPFire) and make it executable for user `root`.
@@ -51,8 +51,8 @@ No specific Zabbix configuration is required
 ### Macros used
 |Name|Description|Default|
 |----|-----------|-------|
-|{$IPFIRE.CONN_MAX} |<p>Max percentage of max open connections used before triggering warning</p>|`95` |
-|{$IPFIRE.CONN_MAX_RESOLVE} |<p>Percentage of max open connections used before resolving trigger</p>|`85` |
+|{$IPFIRE.CONN.MAX.WARN} |<p>Max percentage of max open connections used before triggering warning</p>|`95` |
+|{$IPFIRE.CONN.MAX.RESOLVE} |<p>Percentage of max open connections used before resolving trigger</p>|`85` |
 |{$IPFIRE.FW_CHAIN.MATCHES} |<p>Only discover firewall chains matching this regex</p>|`^.*$` |
 |{$IPFIRE.FW_CHAIN.NOT_MATCHES} |<p>Do not discover firewall chains matching this regex</p>|`CHANGE_IF_NEEDED` |
 |{$IPFIRE.SERVICE.TRIGGER} |<p>Whether Zabbix needs to trigger when an IPFire service is down. This variable can be used with context to exclude specific services.</p>|`1` |
