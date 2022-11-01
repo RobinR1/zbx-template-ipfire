@@ -1,13 +1,41 @@
 #!/usr/bin/perl
+###############################################################################
+# ipfire_services.pl - Retrieves available IPFire services information and 
+#                      return this as a JSON array suitable for easy processing 
+#                      by Zabbix server
+#
+# Author: robin.roevens (at) disroot.org
+# Version: 2.0
+#
+# Based on: services.cgi by IPFire Team
+# Copyright (C) 2007-2021  IPFire Team  <info@ipfire.org> 
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License 
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 
+###############################################################################
 
 use strict;
 
 # enable only the following on debugging purpose
-use warnings;
+# use warnings;
+
+# Load pakfire "library"
+require "/opt/pakfire/lib/functions.pl";
 
 # Maps a nice printable name to the changing part of the pid file, which
 # is also the name of the program
-my %servicenames =(
+my %servicenames = (
         'DHCP Server' => 'dhcpd',
         'Web Server' => 'httpd',
         'CRON Server' => 'fcron',
@@ -22,7 +50,7 @@ my %servicenames =(
         'OpenVPN' => 'openvpn'
 );
 
-# Hash to overwrite the process name of a process if it differs fromt the launch command.
+# Hash to overwrite the process name of a process if it differs from the launch command.
 my %overwrite_exename_hash = (
         "suricata" => "Suricata-Main"
 );
@@ -47,42 +75,33 @@ foreach $key (sort keys %servicenames){
 }
 
 # Generate list of installed addon pak's
-my @pak = `find /opt/pakfire/db/installed/meta-* 2>/dev/null | cut -d"-" -f2`;
-foreach (@pak){
-	chomp($_);
+my %paklist = &Pakfire::dblist("installed");
 
-	# Check which of the paks are services
-	my @svc = `find /etc/init.d/$_ 2>/dev/null | cut -d"/" -f4`;
-	foreach (@svc){
-		# blacklist some packages
-		#
-		# alsa has trouble with the volume saving and was not really stopped
-		# mdadm should not stopped with webif because this could crash the system
-		#
-		chomp($_);
-		if ( $_ eq 'squid' ) {
-			next;
-		}
-		if ( ($_ ne "alsa") && ($_ ne "mdadm") ) {
-			print ",";
-			print "{";
+foreach my $pak (keys %paklist) {
+        my %metadata = &Pakfire::getmetadata($pak, "installed");
+                
+        # If addon contains services
+        if ("$metadata{'Services'}") {
+                foreach my $service (split(/ /, "$metadata{'Services'}")) {
+                        print ",";
+                        print "{";
 
-			print "\"service\":\"Addon: $_\",";
-			print "\"servicename\":\"$_\",";
+                        print "\"service\":\"Addon: $metadata{'Name'}\",";
+                        print "\"servicename\":\"$service\",";
 
-			my $onboot = isautorun($_);
-			print "\"onboot\":$onboot,";
+                        my $onboot = isautorun($service);
+                        print "\"onboot\":$onboot,";
 
-			print &addonservicestats($_);
+                        print &addonservicestats($service);
 
-			print "}";
-		}
+                        print "}";
+                }
 	}
 }	
 
 print "]";
 
-sub servicestats{
+sub servicestats {
 	my $cmd = $_[0];
 	my $status = "\"servicename\":\"$cmd\",\"state\":\"0\"";
 	my $pid = '';
@@ -137,32 +156,49 @@ sub servicestats{
         return $status;
 }
 
-sub isautorun{
+sub isautorun {
         my $cmd = $_[0];
-        my $status = "0";
-        my $init = `find /etc/rc.d/rc3.d/S??${cmd} 2>/dev/null`;
-        chomp ($init);
-        if ($init ne ''){
-                $status = "1";
-        }
-        $init = `find /etc/rc.d/rc3.d/off/S??${cmd} 2>/dev/null`;
-        chomp ($init);
-        if ($init ne ''){
-                $status = "0";
-        }
 
-        return $status;
+        # Init directory.
+	my $initdir = "/etc/rc.d/rc3.d/";
+
+        return &find_init("$cmd", "$initdir") ? 1 : 0;
 }
 
-sub addonservicestats{
+sub find_init {
+	my ($cmd, $dir) = @_;
+
+	# Open given init directory.
+	opendir (INITDIR, "$dir") || die "Cannot opendir $dir: $!";
+
+	# Read-in init files from directory.
+	my @inits = readdir(INITDIR);
+
+	# Close directory handle.
+	closedir(INITDIR);
+
+	# Loop through the directory.
+	foreach my $init (@inits) {
+		# Check if the current processed file belongs to the given command.
+		if ($init =~ /S\d+\d+$cmd\z/) {
+			# Found, return "1" - True.
+			return "1";
+		}
+        }
+
+	# Nothing found, return nothing.
+	return;
+}
+
+sub addonservicestats {
         my $cmd = $_[0];
         my $status = "0";
         my $pid = '';
         my $testcmd = '';
         my $exename;
-        my @memory;
+        my @memory = (0);
 
-        $testcmd = `sudo /usr/local/bin/addonctrl $_ status 2>/dev/null`;
+        $testcmd = `/usr/local/bin/addonctrl $cmd status 2>/dev/null`;
 
         if ( $testcmd =~ /is\ running/ && $testcmd !~ /is\ not\ running/){
                 $status = "\"state\":1";
@@ -194,4 +230,3 @@ sub addonservicestats{
         }
         return $status;
 }
-
