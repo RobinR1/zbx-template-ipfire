@@ -1,13 +1,13 @@
 zabbix_export:
-  version: '6.0'
-  date: '2023-10-11T19:48:42Z'
-  groups:
-    - uuid: 6a9e41a5ef934d2196aca8b4abdafff5
-      name: 'OpenVPN Clients'
+  version: '6.4'
+  template_groups:
     - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
       name: Templates/Applications
     - uuid: 57b7ae836ca64446ba2c296389c009b7
       name: Templates/Modules
+  host_groups:
+    - uuid: 6a9e41a5ef934d2196aca8b4abdafff5
+      name: 'OpenVPN Clients'
   templates:
     - uuid: 80543e3dcb9641a8a5a33554ad6638a9
       template: 'IPFire by Zabbix agent active'
@@ -23,6 +23,9 @@ zabbix_export:
         Don't forget to restart zabbix-agent.
         
         Created by Robin Roevens (robin.roevens (at) disroot.org)
+      vendor:
+        name: RobinR1
+        version: 6.4-0.3
       groups:
         - name: Templates/Applications
       items:
@@ -884,6 +887,9 @@ zabbix_export:
         Monitor an IPFire OpenVPN client
         
         This template is applied to discovered OpenVPN client hosts by the template IPFire by Zabbix agent and is not meant to be applied manually to any hosts.
+      vendor:
+        name: RobinR1
+        version: 6.4-0.3
       groups:
         - name: Templates/Modules
       items:

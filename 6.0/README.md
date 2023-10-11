@@ -9,16 +9,18 @@ This template-set monitors an IPFire appliance/instance and supports monitoring 
 - IPFire services (default IPFire services and possible Addon services)
 - Pakfire status (Installed version, Available update(s))
 - Network stats (Line quality, Open Connections, Firewall hits)
+- OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats)
 
 Use in conjunction with a default Template OS Linux-template for CPU/Memory/Storage monitoring of the IPFire appliance/instance.
 
 This template was created for:
 
-- IPFire 2.27 - Core update 170
+- IPFire 2.27 - Core update 179
 
 **Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
 
-Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of this template for older versions of IPFire.
+Use [v0.2](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.2) of this template for IPFire CU 170 to 178
+Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of this template for IPFire versions older than CU 170.
 
 ## Setup
 
@@ -29,6 +31,11 @@ Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of t
 - Unless you have your own custom sudoers config for zabbix; Copy `zabbix_agentd_user` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `ipfire_services.pl` as root user.
   Otherwise, make sure the contents of `zabbix_agentd_user` from this template are added to your custom `/etc/sudoers.d/zabbix_agentd_user` file.
 - Restart Zabbix agent.
+
+### New in v0.3
+
+Support for OpenVPN clients was added to this template. 
+OpenVPN clients configured in IPFire are now automatically discovered (see also `{$IPFIRE.OVPN.*}` macro's [below](#macros-used) to customize this discovery) and added to Zabbix as hosts in the hostgroup `OpenVPN Clients`. Those discovered hosts will monitor the client-specific properties and statistics.
 
 ### Upgrade from v0.1
 
@@ -59,6 +66,9 @@ No specific Zabbix configuration is required
 |{$IPFIRE.SERVICE.TRIGGER} |<p>Whether Zabbix needs to trigger when an IPFire service is down. This variable can be used with context to exclude specific services.</p>|`1` |
 |{$IPFIRE.SERVICENAME.MATCHES} |<p>All services matching this regex will be discovered</p>|`^.*$` |
 |{$IPFIRE.SERVICENAME.NOT_MATCHES} |<p>Services matching this regex will not be discovered</p>|`CHANGE_IF_NEEDED` |
+|{$IPFIRE.OVPN.COMMONNAME.MATCHES} |<p>OpenVPN clients with common name matching this regex will be discovered</p>|`^.*$` |
+|{$IPFIRE.OVPN.COMMONNAME.NOTMATCHES} |<p>OpenVPN clients with common name matching this regex will not be discovered</p>|`CHANGE_IF_NEEDED` |
+|{$IPFIRE.OVPN.STATE.MATCHES} |<p>OpenVPN clients with a state (on/off) matching this regex will be discovered.</p>|`on` |
 
 #### Notes about $IPFIRE.SERVICE.TRIGGER
 This template does not 'detect' if you have manually disabled a service in IPFire, so by default it will alarm you when any service is down. This is done on purpose so that you will also be notified if a service is unintentionly disabled.
