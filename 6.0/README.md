@@ -1,10 +1,14 @@
 # IPFire by Zabbix Agent Active
 
+## Description
+
+This template monitors an [IPFire](https://www.ipfire.org/) [appliance](https://www.lightningwirelabs.com/products/ipfire/appliances) or [instance](https://www.ipfire.org/download)
+
 ## Overview
 
 For Zabbix version: 6.0
 
-This template-set monitors an IPFire appliance/instance and supports monitoring of:
+Supports monitoring of:
 - IPFire general stats (Number of current DHCPd clients)
 - IPFire services (default IPFire services and possible Addon services)
 - Pakfire status (Installed version, Available update(s))
@@ -19,8 +23,9 @@ This template was created for:
 
 **Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
 
-Use [v0.2](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.2) of this template for IPFire CU 170 to 178
-Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of this template for IPFire versions older than CU 170.
+## Author
+
+Robin Roevens
 
 ## Setup
 
@@ -31,26 +36,6 @@ Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of t
 - Unless you have your own custom sudoers config for zabbix; Copy `zabbix_agentd_user` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `ipfire_services.pl` as root user.
   Otherwise, make sure the contents of `zabbix_agentd_user` from this template are added to your custom `/etc/sudoers.d/zabbix_agentd_user` file.
 - Restart Zabbix agent.
-
-### New in v0.3
-
-Support for OpenVPN clients was added to this template. 
-OpenVPN clients configured in IPFire are now automatically discovered (see also `{$IPFIRE.OVPN.*}` macro's [below](#macros-used) to customize this discovery) and added to Zabbix as hosts in the hostgroup `OpenVPN Clients`. Those discovered hosts will monitor the client-specific properties and statistics.
-
-### Upgrade from v0.1
-
-Since IPFire Core update 170, most of the custom userparameters are now implemented in the zabbix_agentd addon so the ones included with v0.1 of this template should be removed from `/etc/zabbix_agentd/zabbis_agentd.d/`:
-
-- Make sure you are running Core Update 170 and have `zabbix_agentd` addon 6.0.6 or higher installed
-- Remove these files from `/etc/zabbix_agentd/zabbix_agentd.d/`:
-  - `template_app_pakfire.conf`
-  - `template_module_ipfire_network_stats.conf`
-  - `template_module_ipfire_services.conf` - This file is actually renamed in newer versions of this template
-  - `template_module_linux_block_devices.conf`
-
-Now you can perform the setup steps described above to install the new version of this template. Note however that this template used to be a set of templates which are now merged and renamed (removing 'Template App' from the name) to be in line with the latest [Zabbix template guidelines](https://www.zabbix.com/documentation/guidelines/en/thosts/configuration). You will have to manually remove the old template set and assign your IPFire host(s) to this new template.
-
-Note: The sudoers file `/etc/sudoers.d/zabbix` (custom or from v0.1 of this template) was automatically renamed to `/etc/sudoers.d/zabbix_agentd_user` by the IPFire `zabbix_agentd` addon upgrade. If you choose not to overwrite this file due to custom changes to it; make sure you do remove the commands that where added for [v0.1](https://github.com/RobinR1/zbx-template-ipfire/blob/0.1/sudoers.d/zabbix).
 
 ## Zabbix configuration
 
