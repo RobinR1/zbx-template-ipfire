@@ -1,0 +1,30 @@
+# IPFire by Zabbix Agent Active
+
+## Description
+
+This template monitors an [IPFire](https://www.ipfire.org/) [appliance](https://www.lightningwirelabs.com/products/ipfire/appliances) or [instance](https://www.ipfire.org/download)
+
+## Overview
+
+For Zabbix version: [6.0](./6.0/), [6.4](./6.4/)
+
+Supports monitoring of:
+- IPFire general stats (Number of current DHCPd clients)
+- IPFire services (default IPFire services and possible Addon services)
+- Pakfire status (Installed version, Available update(s))
+- Network stats (Line quality, Open Connections, Firewall hits)
+- OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats)
+
+Use in conjunction with a default Template OS Linux-template for CPU/Memory/Storage monitoring of the IPFire appliance/instance.
+
+This template was created for:
+
+- IPFire 2.27 - Core update 179
+
+**Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
+
+![image info](./images/IPFire_Zabbix_Dashboard.png)
+
+## Author
+
+Robin Roevens
