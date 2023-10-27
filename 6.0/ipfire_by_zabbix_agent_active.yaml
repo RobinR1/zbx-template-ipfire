@@ -27,7 +27,7 @@ zabbix_export:
         - name: Templates/Applications
       items:
         - uuid: 9be0495e730a476fac68b91583bb4146
-          name: 'Captive Portal: # of active clients'
+          name: 'IPFire: Captive Portal: # of active clients'
           type: ZABBIX_ACTIVE
           key: ipfire.captive.clients
           history: 7d
@@ -38,7 +38,7 @@ zabbix_export:
             - tag: service
               value: captive-portal
         - uuid: da3ef4de97f343d4a3d0d420e4e0df36
-          name: 'DHCP Server: # of active leases'
+          name: 'IPFire: DHCP Server: # of active leases'
           type: ZABBIX_ACTIVE
           key: ipfire.dhcpd.clients
           history: 7d
@@ -49,7 +49,7 @@ zabbix_export:
             - tag: service
               value: dhcpd
         - uuid: d7752458935c4e40adaacd4e1107f40e
-          name: 'Firewall hits: Get'
+          name: 'IPFire: Firewall hits: Get'
           type: ZABBIX_ACTIVE
           key: ipfire.net.fw.hits.raw
           history: '0'
@@ -64,7 +64,7 @@ zabbix_export:
             - tag: component
               value: raw
         - uuid: 2e0173990de34061b2e743ef22518c6a
-          name: 'Network: Internet gateway available'
+          name: 'IPFire: Network: Internet gateway available'
           type: ZABBIX_ACTIVE
           key: ipfire.net.gateway.ping
           history: 7d
@@ -77,14 +77,14 @@ zabbix_export:
           triggers:
             - uuid: 750db20bec7c46e6ab9943e516f52947
               expression: 'last(/IPFire by Zabbix agent active/ipfire.net.gateway.ping)<>1'
-              name: 'Internet Gateway is not reachable'
+              name: 'IPFire: Internet Gateway is not reachable'
               priority: HIGH
               description: 'Internet Gateway on interface RED is unreachable. Internet connection is lost or intermittent.'
               tags:
                 - tag: scope
                   value: availability
         - uuid: f548b019c57a42cd8b6d4cf0a244f098
-          name: 'Network: Internet gateway ping timings'
+          name: 'IPFire: Network: Internet gateway ping timings'
           type: ZABBIX_ACTIVE
           key: ipfire.net.gateway.pingtime
           history: 7d
@@ -97,7 +97,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: a01561b00aab4406a38e34440658848d
-          name: 'IPFire Services: Get'
+          name: 'IPFire: Services: Get'
           type: ZABBIX_ACTIVE
           key: ipfire.services
           history: '0'
@@ -110,7 +110,7 @@ zabbix_export:
             - tag: component
               value: service
         - uuid: 45efac8b0c984815b9cf5c2790373911
-          name: 'System: Core-Update available'
+          name: 'IPFire: Core-Update available'
           type: DEPENDENT
           key: pakfire.core-update-available
           delay: '0'
@@ -154,7 +154,7 @@ zabbix_export:
           triggers:
             - uuid: 10fdaa47927d4638b62ec43deff34360
               expression: 'last(/IPFire by Zabbix agent active/pakfire.core-update-available)=1'
-              name: 'Pakfire: Core-Update available'
+              name: 'IPFire: Pakfire: Core-Update available'
               url: 'https://{HOST.CONN}:444/cgi-bin/pakfire.cgi'
               priority: INFO
               description: 'A Core-Update for IPFire is available. Go to the IPFire webgui > IPFire Pakfire to perform an update.'
@@ -165,7 +165,7 @@ zabbix_export:
                   value: security
             - uuid: 059cebb808634b35a3c2f2304e8cfaf5
               expression: 'nodata(/IPFire by Zabbix agent active/pakfire.core-update-available,4h)=1'
-              name: 'Pakfire: Last Pakfire status update > 4h ago'
+              name: 'IPFire: Pakfire: Last Pakfire status update > 4h ago'
               priority: WARNING
               description: 'Zabbix was unable to retrieve Pakfire status for more than 4h. Check if Pakfire is still correctly working.'
               tags:
@@ -176,7 +176,7 @@ zabbix_export:
                 - tag: scope
                   value: security
         - uuid: 3c87cd1c09ec4fc2910c2572d9a4f5e9
-          name: 'System: Core-Update level'
+          name: 'IPFire: Core-Update level'
           type: DEPENDENT
           key: pakfire.core-update-level
           delay: '0'
@@ -200,11 +200,11 @@ zabbix_export:
           triggers:
             - uuid: 315ab087e6b3408eb463eaecbab289f7
               expression: 'change(/IPFire by Zabbix agent active/pakfire.core-update-level)>0'
-              name: 'Pakfire: Core-Update-Level has changed'
+              name: 'IPFire: Pakfire: Core-Update-Level has changed'
               priority: INFO
               manual_close: 'YES'
               dependencies:
-                - name: 'Pakfire: Core-Version has changed'
+                - name: 'IPFire: Pakfire: Core-Version has changed'
                   expression: '(last(/IPFire by Zabbix agent active/pakfire.core-version,#1)<>last(/IPFire by Zabbix agent active/pakfire.core-version,#2))=1'
               tags:
                 - tag: scope
@@ -212,7 +212,7 @@ zabbix_export:
                 - tag: scope
                   value: security
         - uuid: 96e3883bf9784f45b5ff7a9acaeeb5a9
-          name: 'System: Core version'
+          name: 'IPFire: Core version'
           type: DEPENDENT
           key: pakfire.core-version
           delay: '0'
@@ -237,7 +237,7 @@ zabbix_export:
           triggers:
             - uuid: 743e14e27c1141cdb08c895e768e9931
               expression: '(last(/IPFire by Zabbix agent active/pakfire.core-version,#1)<>last(/IPFire by Zabbix agent active/pakfire.core-version,#2))=1'
-              name: 'Pakfire: Core-Version has changed'
+              name: 'IPFire: Pakfire: Core-Version has changed'
               priority: INFO
               tags:
                 - tag: scope
@@ -245,7 +245,7 @@ zabbix_export:
                 - tag: scope
                   value: security
         - uuid: 299ed0d3aa97435088fd805646ffe649
-          name: 'System: # of addon updates available'
+          name: 'IPFire: Pakfire: # of addon updates available'
           type: DEPENDENT
           key: pakfire.package-updates-available
           delay: '0'
@@ -269,7 +269,7 @@ zabbix_export:
           triggers:
             - uuid: 39bc50b094cf40ab86588b909eef2db7
               expression: 'last(/IPFire by Zabbix agent active/pakfire.package-updates-available)>0'
-              name: 'Pakfire: Package-Updates available'
+              name: 'IPFire: Pakfire: Package-Updates available'
               priority: INFO
               tags:
                 - tag: scope
@@ -277,7 +277,7 @@ zabbix_export:
                 - tag: scope
                   value: security
         - uuid: 8dbec81630674c7c89a74ba12cdae84b
-          name: 'System: Reboot required'
+          name: 'IPFire: Reboot required'
           type: DEPENDENT
           key: pakfire.reboot-required
           delay: '0'
@@ -321,7 +321,7 @@ zabbix_export:
           triggers:
             - uuid: 5bf0656d2f9f46258ee36ca10096a9bb
               expression: 'last(/IPFire by Zabbix agent active/pakfire.reboot-required)=1'
-              name: 'Pakfire: Reboot required'
+              name: 'IPFire: Pakfire: Reboot required'
               url: 'https://{HOST.CONN}:444/cgi-bin/shutdown.cgi'
               priority: INFO
               description: 'An update requires a reboot of IPFire to complete. Please reboot the host as soon as possible. Go to the IPFire webgui > System > Shutdown to perform a reboot.'
@@ -331,7 +331,7 @@ zabbix_export:
                 - tag: scope
                   value: security
         - uuid: 0593a390fa7f40e1b23c94fe845eff09
-          name: 'Pakfire Status: Get'
+          name: 'IPFire: Pakfire Status: Get'
           type: ZABBIX_ACTIVE
           key: pakfire.status
           delay: 10m
@@ -346,7 +346,7 @@ zabbix_export:
             - tag: component
               value: system
         - uuid: 7349c0e5921440f5bf1e8be3111acb7f
-          name: 'Network: # of open connections'
+          name: 'IPFire: Network: # of open connections'
           type: ZABBIX_ACTIVE
           key: 'vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_count"]'
           history: 7d
@@ -354,7 +354,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: aaa91f7fdd3949d0adf4a6f90e9ddc87
-          name: 'Network: Max # of open connections'
+          name: 'IPFire: Network: Max # of open connections'
           type: ZABBIX_ACTIVE
           key: 'vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_max"]'
           delay: 1h
@@ -363,7 +363,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: cdc1d6590ab044cc8e9684119238c1db
-          name: 'System: Last update'
+          name: 'IPFire: Pakfire: Last update'
           type: ZABBIX_ACTIVE
           key: 'vfs.file.time["/opt/pakfire/db/core/mine",modify]'
           delay: 10m
@@ -379,7 +379,7 @@ zabbix_export:
             - tag: component
               value: system
         - uuid: 8614cc5f14364b8d851631850a0d0ce9
-          name: 'Pakfire: Last core-list update'
+          name: 'IPFire: Pakfire: Last core-list update'
           type: ZABBIX_ACTIVE
           key: 'vfs.file.time["/opt/pakfire/db/lists/core-list.db",modify]'
           delay: 10m
@@ -401,11 +401,11 @@ zabbix_export:
               expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/core-list.db",modify],49h)=0'
               recovery_mode: RECOVERY_EXPRESSION
               recovery_expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/core-list.db",modify],1h)=1'
-              name: 'Pakfire: Last core-list update > 49h ago'
+              name: 'IPFire: Pakfire: Last core-list update > 49h ago'
               priority: WARNING
               description: 'Auslösung bei Delta > 49h / Recovery bei Delta < 1h'
               dependencies:
-                - name: 'Pakfire: Last server-list update > 49h ago'
+                - name: 'IPFire: Pakfire: Last server-list update > 49h ago'
                   expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/server-list.db",modify],49h)=0'
                   recovery_expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/server-list.db",modify],1h)=1'
               tags:
@@ -416,7 +416,7 @@ zabbix_export:
                 - tag: scope
                   value: security
         - uuid: 72d6284952044ff58795e6076e6ad3c8
-          name: 'Pakfire: Last packages-list update'
+          name: 'IPFire: Pakfire: Last packages-list update'
           type: ZABBIX_ACTIVE
           key: 'vfs.file.time["/opt/pakfire/db/lists/packages_list.db",modify]'
           delay: 10m
@@ -438,11 +438,11 @@ zabbix_export:
               expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/packages_list.db",modify],49h)=0'
               recovery_mode: RECOVERY_EXPRESSION
               recovery_expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/packages_list.db",modify],1h)=1'
-              name: 'Pakfire: Last packages-list update > 49h ago'
+              name: 'IPFire: Pakfire: Last packages-list update > 49h ago'
               priority: WARNING
               description: 'Auslösung bei Delta > 49h / Recovery bei Delta < 1h'
               dependencies:
-                - name: 'Pakfire: Last server-list update > 49h ago'
+                - name: 'IPFire: Pakfire: Last server-list update > 49h ago'
                   expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/server-list.db",modify],49h)=0'
                   recovery_expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/server-list.db",modify],1h)=1'
               tags:
@@ -453,7 +453,7 @@ zabbix_export:
                 - tag: scope
                   value: security
         - uuid: 0dd0776c8b91489784d45bf06893d1c3
-          name: 'Pakfire: Last server-list update'
+          name: 'IPFire: Pakfire: Last server-list update'
           type: ZABBIX_ACTIVE
           key: 'vfs.file.time["/opt/pakfire/db/lists/server-list.db",modify]'
           delay: 10m
@@ -475,7 +475,7 @@ zabbix_export:
               expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/server-list.db",modify],49h)=0'
               recovery_mode: RECOVERY_EXPRESSION
               recovery_expression: 'fuzzytime(/IPFire by Zabbix agent active/vfs.file.time["/opt/pakfire/db/lists/server-list.db",modify],1h)=1'
-              name: 'Pakfire: Last server-list update > 49h ago'
+              name: 'IPFire: Pakfire: Last server-list update > 49h ago'
               priority: WARNING
               description: 'Auslösung bei Delta > 49h / Recovery bei Delta < 1h'
               tags:
@@ -503,7 +503,7 @@ zabbix_export:
           description: 'Discovery of firewall chains in filter table to create "firewall hits" items/chain'
           item_prototypes:
             - uuid: e754323822f04c6b9e2e77bca43344fe
-              name: 'Firewall: Hits on chain {#FW_CHAIN}'
+              name: 'IPFire: Firewall: Hits on chain {#FW_CHAIN}'
               type: DEPENDENT
               key: 'ipfire.net.fw.hits[{#FW_CHAIN}]'
               delay: '0'
@@ -608,7 +608,7 @@ zabbix_export:
                 formulaid: B
           item_prototypes:
             - uuid: bd1d7dfffc65492fb3eb7ade56c07bf8
-              name: 'OpenVPN: # clients connected'
+              name: 'IPFire: OpenVPN: # clients connected'
               type: DEPENDENT
               key: 'ipfire.ovpn.clients.count[{#SINGLETON}]'
               delay: '0'
@@ -629,7 +629,7 @@ zabbix_export:
                 - tag: service
                   value: openvpn
             - uuid: 17b4f2e8a9b944c7b09f81c6b6f8699b
-              name: 'OpenVPN: Statusreport: Get'
+              name: 'IPFire: OpenVPN: Statusreport: Get'
               type: ZABBIX_ACTIVE
               key: 'ipfire.ovpn.statusreport.get[{#SINGLETON}]'
               history: '0'
@@ -650,7 +650,7 @@ zabbix_export:
                 - tag: service
                   value: openvpn
             - uuid: 9f207a283c4347569f02374f8e548b69
-              name: 'OpenVPN: Last status report update'
+              name: 'IPFire: OpenVPN: Last status report update'
               type: DEPENDENT
               key: 'ipfire.ovpn.statusreport.timestamp[{#SINGLETON}]'
               delay: '0'
@@ -672,7 +672,7 @@ zabbix_export:
                 - tag: service
                   value: openvpn
             - uuid: 64ab99104e5c4a748745fbc1d02b1803
-              name: '{#SERVICE}: Memory usage'
+              name: 'IPFire: {#SERVICE}: Memory usage'
               type: DEPENDENT
               key: 'ipfire.services.memory[{#SERVICENAME}]'
               delay: '0'
@@ -693,7 +693,7 @@ zabbix_export:
                 - tag: service
                   value: '{#SERVICENAME}'
             - uuid: 3d679fd91a334de1949e5cc5afdcc8a3
-              name: '{#SERVICE}: Start on boot'
+              name: 'IPFire: {#SERVICE}: Start on boot'
               type: DEPENDENT
               key: 'ipfire.services.onboot[{#SERVICENAME}]'
               delay: '0'
@@ -714,7 +714,7 @@ zabbix_export:
                 - tag: service
                   value: '{#SERVICENAME}'
             - uuid: 865fe738cfb34752b83605930b3cf180
-              name: '{#SERVICE}: Pid'
+              name: 'IPFire: {#SERVICE}: Pid'
               type: DEPENDENT
               key: 'ipfire.services.pid[{#SERVICENAME}]'
               delay: '0'
@@ -737,7 +737,7 @@ zabbix_export:
                 - tag: service
                   value: '{#SERVICENAME}'
             - uuid: 7fa6c6e4b6cf4a018ac3002122b0e0e5
-              name: '{#SERVICE}: State'
+              name: 'IPFire: {#SERVICE}: State'
               type: DEPENDENT
               key: 'ipfire.services.state[{#SERVICENAME}]'
               delay: '0'
@@ -758,7 +758,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: 71d4baaa724140179fbde0bbdd170dfa
                   expression: '{$IPFIRE.SERVICE.TRIGGER:"{#SERVICENAME}"} and last(/IPFire by Zabbix agent active/ipfire.services.state[{#SERVICENAME}])<>1'
-                  name: '{#SERVICE}: Service not running'
+                  name: 'IPFire: {#SERVICE}: Service not running'
                   priority: HIGH
                   description: 'The IPFire service {#SERVICE} is not running. If this service is manually disabled, set host macro $IPFIRE.SERVICE.TRIGGER:"{#SERVICENAME}" to 0 to disable this trigger.'
                   tags:
@@ -770,13 +770,13 @@ zabbix_export:
                 last(/IPFire by Zabbix agent active/ipfire.services.onboot[{#SERVICENAME}])=1 and 
                 (nodata(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.get[{#SINGLETON}],5m)=1 or
                  time()-last(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.timestamp[{#SINGLETON}])>5m)
-              name: 'OpenVPN: Statusreport outdated'
+              name: 'IPFire: OpenVPN: Statusreport outdated'
               priority: AVERAGE
               description: |
                 Did not receive a recent OpenVPN status report. OpenVPN client data is probably outdated and/or inaccurate.
                 Check if Zabbix Agent is running and properly configured to send OpenVPN status reports (UserParameter: ipfire.ovpn.statusreport.get) and/or OpenVPN server configuration is the IPFire default.
               dependencies:
-                - name: '{#SERVICE}: Service not running'
+                - name: 'IPFire: {#SERVICE}: Service not running'
                   expression: '{$IPFIRE.SERVICE.TRIGGER:"{#SERVICENAME}"} and last(/IPFire by Zabbix agent active/ipfire.services.state[{#SERVICENAME}])<>1'
               tags:
                 - tag: scope
@@ -1304,7 +1304,7 @@ zabbix_export:
       expression: 'last(/IPFire by Zabbix agent active/vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_count"])/last(/IPFire by Zabbix agent active/vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_max"])*100>{$IPFIRE.CONN.MAX.WARN}'
       recovery_mode: RECOVERY_EXPRESSION
       recovery_expression: 'last(/IPFire by Zabbix agent active/vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_count"])/last(/IPFire by Zabbix agent active/vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_max"])*100<={$IPFIRE.CONN.MAX.RESOLVE}'
-      name: 'Number of open connection is too high (> 90% of max open connections)'
+      name: 'IPFire: Number of open connection is too high (> 90% of max open connections)'
       opdata: 'Open connections: {ITEM.LASTVALUE1}, Max open connections: {ITEM.LASTVALUE2}'
       priority: WARNING
       description: |
@@ -1317,7 +1317,7 @@ zabbix_export:
           value: capacity
   graphs:
     - uuid: f9acf1d3482f4af3b619a649eb81b844
-      name: 'Line Quality'
+      name: 'IPFire: Line Quality'
       graph_items:
         - sortorder: '1'
           drawtype: GRADIENT_LINE
@@ -1326,7 +1326,7 @@ zabbix_export:
             host: 'IPFire by Zabbix agent active'
             key: ipfire.net.gateway.pingtime
     - uuid: f4bf7726c930427aa2a99bad42d7fa7f
-      name: 'Open Connections'
+      name: 'IPFire: Open Connections'
       graph_items:
         - sortorder: '1'
           color: FF0000
