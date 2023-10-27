@@ -24,6 +24,7 @@ This template was created for:
 **Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
 
 ![image info](./images/IPFire_Zabbix_Dashboard.png)
+*Example Zabbix 6.4 dashboard for an IPFire instance using this template + Zabbix default Linux by Zabbix Agent template*
 
 ## Author
 
