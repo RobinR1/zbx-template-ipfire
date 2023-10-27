@@ -69,6 +69,8 @@ zabbix_export:
           key: ipfire.net.gateway.ping
           history: 7d
           description: 'Checks if the internet gateway on RED is reachable'
+          valuemap:
+            name: 'Service state'
           tags:
             - tag: component
               value: gateway
