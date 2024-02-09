@@ -13,7 +13,7 @@ Supports monitoring of:
 - IPFire services (default IPFire services and possible Addon services)
 - Pakfire status (Installed version, Available update(s))
 - Network stats (Line quality, Open Connections, Firewall hits)
-- OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats)
+- OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats, Client/Server/CA Certificate validation)
 
 Use in conjunction with a default Template OS Linux-template for CPU/Memory/Storage monitoring of the IPFire appliance/instance.
 
