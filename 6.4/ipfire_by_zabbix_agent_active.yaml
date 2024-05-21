@@ -1382,7 +1382,7 @@ zabbix_export:
         This template is applied to discovered OpenVPN client hosts by the template IPFire by Zabbix agent and is not meant to be applied manually to any hosts.
       vendor:
         name: RobinR1
-        version: 6.4-0.3
+        version: 6.4-0.4
       groups:
         - name: Templates/Modules
       items:
