@@ -61,10 +61,6 @@ zabbix_export:
           description: 'Raw data item for retrieving firewall hits on all forwarding chains'
           tags:
             - tag: component
-              value: firewall
-            - tag: component
-              value: network
-            - tag: component
               value: raw
         - uuid: 2e0173990de34061b2e743ef22518c6a
           name: 'IPFire: Network: Internet gateway available'
@@ -112,8 +108,6 @@ zabbix_export:
           tags:
             - tag: component
               value: raw
-            - tag: component
-              value: service
         - uuid: 45efac8b0c984815b9cf5c2790373911
           name: 'IPFire: Core-Update available'
           type: DEPENDENT
@@ -345,11 +339,7 @@ zabbix_export:
           value_type: TEXT
           tags:
             - tag: component
-              value: pakfire
-            - tag: component
               value: raw
-            - tag: component
-              value: system
         - uuid: 7349c0e5921440f5bf1e8be3111acb7f
           name: 'IPFire: Network: # of open connections'
           type: ZABBIX_ACTIVE
