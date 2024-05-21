@@ -13,4 +13,3 @@
 #
 
 zabbix ALL=(ALL) NOPASSWD: /etc/zabbix_agentd/scripts/ipfire_services.pl
-zabbix ALL=(ALL) NOPASSWD: /etc/zabbix_agentd/scripts/ipfire_certificate_detail.sh
