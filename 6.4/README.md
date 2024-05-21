@@ -1,26 +1,31 @@
 # IPFire by Zabbix Agent Active
 
+## Description
+
+This template monitors an [IPFire](https://www.ipfire.org/) [appliance](https://www.lightningwirelabs.com/products/ipfire/appliances) or [instance](https://www.ipfire.org/download)
+
 ## Overview
 
 For Zabbix version: 6.4
 
-This template-set monitors an IPFire appliance/instance and supports monitoring of:
+Supports monitoring of:
 - IPFire general stats (Number of current DHCPd clients)
 - IPFire services (default IPFire services and possible Addon services)
 - Pakfire status (Installed version, Available update(s))
 - Network stats (Line quality, Open Connections, Firewall hits)
-- OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats)
+- OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats, Client/Server/CA Certificate validation)
 
 Use in conjunction with a default Template OS Linux-template for CPU/Memory/Storage monitoring of the IPFire appliance/instance.
 
 This template was created for:
 
-- IPFire 2.27 - Core update 179
+- IPFire 2.27 - Core update 185
 
 **Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
 
-Use [v0.2](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.2) of this template for IPFire CU 170 to 178
-Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of this template for IPFire versions older than CU 170.
+## Author
+
+Robin Roevens
 
 ## Setup
 
@@ -31,26 +36,6 @@ Use [v0.1](https://github.com/RobinR1/zbx-template-ipfire/releases/tag/0.1) of t
 - Unless you have your own custom sudoers config for zabbix; Copy `zabbix_agentd_user` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `ipfire_services.pl` as root user.
   Otherwise, make sure the contents of `zabbix_agentd_user` from this template are added to your custom `/etc/sudoers.d/zabbix_agentd_user` file.
 - Restart Zabbix agent.
-
-### New in v0.3
-
-Support for OpenVPN clients was added to this template. 
-OpenVPN clients configured in IPFire are now automatically discovered (see also `{$IPFIRE.OVPN.*}` macro's [below](#macros-used) to customize this discovery) and added to Zabbix as hosts in the hostgroup `OpenVPN Clients`. Those discovered hosts will monitor the client-specific properties and statistics.
-
-### Upgrade from v0.1
-
-Since IPFire Core update 170, most of the custom userparameters are now implemented in the zabbix_agentd addon so the ones included with v0.1 of this template should be removed from `/etc/zabbix_agentd/zabbis_agentd.d/`:
-
-- Make sure you are running Core Update 170 and have `zabbix_agentd` addon 6.0.6 or higher installed
-- Remove these files from `/etc/zabbix_agentd/zabbix_agentd.d/`:
-  - `template_app_pakfire.conf`
-  - `template_module_ipfire_network_stats.conf`
-  - `template_module_ipfire_services.conf` - This file is actually renamed in newer versions of this template
-  - `template_module_linux_block_devices.conf`
-
-Now you can perform the setup steps described above to install the new version of this template. Note however that this template used to be a set of templates which are now merged and renamed (removing 'Template App' from the name) to be in line with the latest [Zabbix template guidelines](https://www.zabbix.com/documentation/guidelines/en/thosts/configuration). You will have to manually remove the old template set and assign your IPFire host(s) to this new template.
-
-Note: The sudoers file `/etc/sudoers.d/zabbix` (custom or from v0.1 of this template) was automatically renamed to `/etc/sudoers.d/zabbix_agentd_user` by the IPFire `zabbix_agentd` addon upgrade. If you choose not to overwrite this file due to custom changes to it; make sure you do remove the commands that where added for [v0.1](https://github.com/RobinR1/zbx-template-ipfire/blob/0.1/sudoers.d/zabbix).
 
 ## Zabbix configuration
 
@@ -69,6 +54,7 @@ No specific Zabbix configuration is required
 |{$IPFIRE.OVPN.COMMONNAME.MATCHES} |<p>OpenVPN clients with common name matching this regex will be discovered</p>|`^.*$` |
 |{$IPFIRE.OVPN.COMMONNAME.NOTMATCHES} |<p>OpenVPN clients with common name matching this regex will not be discovered</p>|`CHANGE_IF_NEEDED` |
 |{$IPFIRE.OVPN.STATE.MATCHES} |<p>OpenVPN clients with a state (on/off) matching this regex will be discovered.</p>|`on` |
+|{$IPFIRE.OVPN.CERT.EXPIRY.WARN} |<p>Number of days until the OpenVPN server or CA certificate expires.</p>|`7` |
 
 #### Notes about $IPFIRE.SERVICE.TRIGGER
 This template does not 'detect' if you have manually disabled a service in IPFire, so by default it will alarm you when any service is down. This is done on purpose so that you will also be notified if a service is unintentionly disabled.
@@ -79,6 +65,12 @@ For example to disable the OpenVPN service trigger add `{$IPFIRE.SERVICE.TRIGGER
 
 Or you could opt to use the variables `{$IPFIRE.SERVICENAME.MATCHES}` and/or `{$IPFIRE.SERVICENAME.NOT_MATCHES}` to filter out services
 you don't want to be monitored at all.
+
+#### OpenVPN Client discovery
+This template is actually a set of 2 and includes a second template `IPFire OpenVPN Client by Zabbix agent` specificaly for use by the OpenVPN Client discovery defined in the main template `IPFire by Zabbix agent active`.
+
+If the OpenVPN Service of the IPFire instance is enabled, the main template will discover any configured OpenVPN clients (see `{$IPFIRE.OVPN.*}` macro's to set filters), create those as new hosts in Zabbix and link the `IPFire OpenVPN Client by Zabbix agent` template to them.
+Those client hosts will then start collecting OpenVPN statistics specific to those clients.
 
 ## Credits
 
