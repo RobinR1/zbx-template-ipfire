@@ -19,9 +19,9 @@ Use in conjunction with a default Template OS Linux-template for CPU/Memory/Stor
 
 This template was created for:
 
-- IPFire 2.29 - Core update 185
+- IPFire 2.29 - Core update 189
 
-**Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
+**Warning**: This template will *NOT* work on earlier versions of IPFire.
 
 ## Author
 

@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2024-05-21T20:05:50Z'
+  date: '2024-08-30T22:35:00Z'
   groups:
     - uuid: 6a9e41a5ef934d2196aca8b4abdafff5
       name: 'OpenVPN Clients'
@@ -58,10 +58,6 @@ zabbix_export:
           description: 'Raw data item for retrieving firewall hits on all forwarding chains'
           tags:
             - tag: component
-              value: firewall
-            - tag: component
-              value: network
-            - tag: component
               value: raw
         - uuid: 2e0173990de34061b2e743ef22518c6a
           name: 'IPFire: Network: Internet gateway available'
@@ -109,8 +105,6 @@ zabbix_export:
           tags:
             - tag: component
               value: raw
-            - tag: component
-              value: service
         - uuid: 45efac8b0c984815b9cf5c2790373911
           name: 'IPFire: Core-Update available'
           type: DEPENDENT
@@ -342,11 +336,7 @@ zabbix_export:
           value_type: TEXT
           tags:
             - tag: component
-              value: pakfire
-            - tag: component
               value: raw
-            - tag: component
-              value: system
         - uuid: 7349c0e5921440f5bf1e8be3111acb7f
           name: 'IPFire: Network: # of open connections'
           type: ZABBIX_ACTIVE
@@ -1183,9 +1173,9 @@ zabbix_export:
             - type: JAVASCRIPT
               parameters:
                 - |
-                  // Filter out toggling parts: pid, memory, onboot & add singleton
+                  // Filter out toggling parts: pids, memory, onboot & add singleton
                   discovery_items = JSON.parse(value);
-                  discovery_items.map(function (item) { ['pid','memory', 'onboot'].forEach(function(key) { delete item[key] }); item['singleton'] = "" });
+                  discovery_items.map(function (item) { ['pids','memory', 'onboot'].forEach(function(key) { delete item[key] }); item['singleton'] = "" });
                   return JSON.stringify(discovery_items);
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
@@ -1249,15 +1239,17 @@ zabbix_export:
                 - tag: service
                   value: '{#SERVICENAME}'
             - uuid: 865fe738cfb34752b83605930b3cf180
-              name: 'IPFire: {#SERVICE}: Pid'
+              name: 'IPFire: {#SERVICE}: Pids'
               type: DEPENDENT
-              key: 'ipfire.services.pid[{#SERVICENAME}]'
+              key: 'ipfire.services.pids[{#SERVICENAME}]'
               delay: '0'
               history: 7d
+              trends: '0'
+              value_type: CHAR
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - '$[?(@.servicename == "{#SERVICENAME}")].pid.first()'
+                    - '$[?(@.servicename == "{#SERVICENAME}")].pids.first()'
                   error_handler: DISCARD_VALUE
                 - type: DISCARD_UNCHANGED_HEARTBEAT
                   parameters:
@@ -1314,7 +1306,7 @@ zabbix_export:
                 - |
                   // Filter out toggling parts: state, pid, memory, onboot & add singleton
                   discovery_items = JSON.parse(value);
-                  discovery_items.map(function (item) { ['state','pid','memory', 'onboot'].forEach(function(key) { delete item[key] }); item['singleton'] = "" });
+                  discovery_items.map(function (item) { ['state','pids','memory', 'onboot'].forEach(function(key) { delete item[key] }); item['singleton'] = "" });
                   return JSON.stringify(discovery_items);
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:

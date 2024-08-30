@@ -25,7 +25,7 @@ zabbix_export:
         Created by Robin Roevens (robin.roevens (at) disroot.org)
       vendor:
         name: RobinR1
-        version: 6.4-0.4
+        version: 6.4-0.5
       groups:
         - name: Templates/Applications
       items:
@@ -1176,9 +1176,9 @@ zabbix_export:
             - type: JAVASCRIPT
               parameters:
                 - |
-                  // Filter out toggling parts: pid, memory, onboot & add singleton
+                  // Filter out toggling parts: pids, memory, onboot & add singleton
                   discovery_items = JSON.parse(value);
-                  discovery_items.map(function (item) { ['pid','memory', 'onboot'].forEach(function(key) { delete item[key] }); item['singleton'] = "" });
+                  discovery_items.map(function (item) { ['pids','memory', 'onboot'].forEach(function(key) { delete item[key] }); item['singleton'] = "" });
                   return JSON.stringify(discovery_items);
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
@@ -1242,15 +1242,17 @@ zabbix_export:
                 - tag: service
                   value: '{#SERVICENAME}'
             - uuid: 865fe738cfb34752b83605930b3cf180
-              name: 'IPFire: {#SERVICE}: Pid'
+              name: 'IPFire: {#SERVICE}: Pids'
               type: DEPENDENT
-              key: 'ipfire.services.pid[{#SERVICENAME}]'
+              key: 'ipfire.services.pids[{#SERVICENAME}]'
               delay: '0'
               history: 7d
+              trends: '0'
+              value_type: CHAR
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - '$[?(@.servicename == "{#SERVICENAME}")].pid.first()'
+                    - '$[?(@.servicename == "{#SERVICENAME}")].pids.first()'
                   error_handler: DISCARD_VALUE
                 - type: DISCARD_UNCHANGED_HEARTBEAT
                   parameters:
@@ -1307,7 +1309,7 @@ zabbix_export:
                 - |
                   // Filter out toggling parts: state, pid, memory, onboot & add singleton
                   discovery_items = JSON.parse(value);
-                  discovery_items.map(function (item) { ['state','pid','memory', 'onboot'].forEach(function(key) { delete item[key] }); item['singleton'] = "" });
+                  discovery_items.map(function (item) { ['state','pids','memory', 'onboot'].forEach(function(key) { delete item[key] }); item['singleton'] = "" });
                   return JSON.stringify(discovery_items);
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
@@ -1382,7 +1384,7 @@ zabbix_export:
         This template is applied to discovered OpenVPN client hosts by the template IPFire by Zabbix agent and is not meant to be applied manually to any hosts.
       vendor:
         name: RobinR1
-        version: 6.4-0.4
+        version: 6.4-0.5
       groups:
         - name: Templates/Modules
       items:

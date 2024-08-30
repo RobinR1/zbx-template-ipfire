@@ -5,10 +5,10 @@
 #                      by Zabbix server
 #
 # Author: robin.roevens (at) disroot.org
-# Version: 2.0
+# Version: 3.0
 #
 # Based on: services.cgi by IPFire Team
-# Copyright (C) 2007-2021  IPFire Team  <info@ipfire.org> 
+# Copyright (C) 2007-2024  IPFire Team  <info@ipfire.org> 
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,47 +30,114 @@ use strict;
 # enable only the following on debugging purpose
 # use warnings;
 
-# Load pakfire "library"
+# Load General functions
+# XXXXXXXXXXXXXX require "/var/ipfire/general-functions.pl";
+require "/tmp/general-functions.pl";
+
+# Load Pakfire functions
 require "/opt/pakfire/lib/functions.pl";
-
-# Maps a nice printable name to the changing part of the pid file, which
-# is also the name of the program
-my %servicenames = (
-        'DHCP Server' => 'dhcpd',
-        'Web Server' => 'httpd',
-        'CRON Server' => 'fcron',
-        'DNS Proxy Server' => 'unbound',
-        'Logging Server' => 'syslogd',
-        'Kernel Logging Server' => 'klogd',
-        'NTP Server' => 'ntpd',
-        'Secure Shell Server' => 'sshd',
-        'VPN' => 'charon',
-        'Web Proxy' => 'squid',
-        'Intrusion Detection System' => 'suricata',
-        'OpenVPN' => 'openvpn'
-);
-
-# Hash to overwrite the process name of a process if it differs from the launch command.
-my %overwrite_exename_hash = (
-        "suricata" => "Suricata-Main"
-);
 
 my $first = 1;
 
 print "[";
 
 # Built-in services
-my $key = '';
-foreach $key (sort keys %servicenames){
-	print "," if not $first;
+my %services = (
+        # DHCP Server
+        'DHCP Server' => {
+                "process" => "dhcpd",
+        },
+
+        # Web Server
+        'Web Server' => {
+                "process" => "httpd",
+        },
+
+        # Cron Server
+        'CRON Server' => {
+                "process" => "fcron",
+        },
+
+        # DNS Proxy
+        'DNS Proxy Server' => {
+                "process" => "unbound",
+        },
+
+        # Syslog
+        'Logging Server' => {
+                "process" => "syslogd",
+        },
+
+        # Kernel Logger
+        'Kernel Logging Server' => {
+                "process" => "klogd",
+        },
+
+        # Time Server
+        'NTP Server' => {
+                "process" => "ntpd",
+        },
+
+        # SSH Server
+        'Secure Shell Server' => {
+                "process" => "sshd",
+        },
+
+        # IPsec
+        'VPN' => {
+                "process" => "charon",
+        },
+
+        # Web Proxy
+        'Web Proxy' => {
+                "process" => "squid",
+        },
+
+        # IPS
+        'Intrusion Prevention System' => {
+                "process" => "suricata",
+                "pidfile" => "/var/run/suricata.pid",
+        },
+
+        # OpenVPN Roadwarrior
+        'OpenVPN Roadwarrior Server' => {
+                "process" => "openvpn",
+                "pidfile" => "/var/run/openvpn.pid",
+        }
+);
+
+foreach my $service (sort keys %services){
+        my %config = %{ $services{$service} };
+
+        my $pidfile = $config{"pidfile"};
+        my $process = $config{"process"};
+
+        # Collect all pids
+        my @pids = ();
+
+        # Read the PID file or go search...
+        if (defined $pidfile) {
+                @pids = &General::read_pids("${pidfile}");
+        } else {
+                @pids = &General::find_pids("${process}");
+        }
+
+        # Not Running
+        my $status = "\"state\":\"0\"";
+
+        # Running?
+        if (scalar @pids) {
+                # Get memory consumption
+                my $mem = &General::get_memory_consumption(@pids);
+
+                $status = "\"state\":1,\"pids\":[" . join(',', @pids) . "],\"memory\":$mem";
+        }
+
+        print "," if not $first;
 	$first = 0;
 
 	print "{";
-	print "\"service\":\"$key\",";
-
-	my $shortname = $servicenames{$key};
-	print &servicestats($shortname);
-	
+	print "\"service\":\"$service\",\"servicename\":\"$process\",$status";
 	print "}";
 }
 
@@ -89,10 +156,10 @@ foreach my $pak (keys %paklist) {
                         print "\"service\":\"Addon: $metadata{'Name'}\",";
                         print "\"servicename\":\"$service\",";
 
-                        my $onboot = isautorun($service);
+                        my $onboot = isautorun($pak, $service);
                         print "\"onboot\":$onboot,";
 
-                        print &addonservicestats($service);
+                        print &addonservicestats($pak, $service);
 
                         print "}";
                 }
@@ -101,108 +168,34 @@ foreach my $pak (keys %paklist) {
 
 print "]";
 
-sub servicestats {
-	my $cmd = $_[0];
-	my $status = "\"servicename\":\"$cmd\",\"state\":\"0\"";
-	my $pid = '';
-	my $testcmd = '';
-        my $exename;
-        my $memory;
+sub isautorun() {
+        my ($pak, $service) = @_;
+	my @testcmd = &General::system_output("/usr/local/bin/addonctrl", "$pak", "boot-status", "$service");
+	my $testcmd = @testcmd[0];
+	my $status = 9;
 
+	# Check if autorun for the given service is enabled.
+	if ( $testcmd =~ /enabled\ on\ boot/ ) {
+		$status = 1;
+	} elsif ( $testcmd =~ /disabled\ on\ boot/ ) {
+		$status = 0;
+	}
 
-	$cmd =~ /(^[a-z]+)/;
-	
-	# Check if the exename needs to be overwritten.
-        # This happens if the expected process name string
-        # differs from the real one. This may happened if
-        # a service uses multiple processes or threads.
-        if (exists($overwrite_exename_hash{$cmd})) {
-                # Grab the string which will be reported by
-                # the process from the corresponding hash.
-                $exename = $overwrite_exename_hash{$1};
-        } else {
-                # Directly expect the launched command as
-                # process name.
-                $exename = $1;
-        }
-	
-	if (open(FILE, "/var/run/${cmd}.pid")){
-                $pid = <FILE>; chomp $pid;
-                close FILE;
-                if (open(FILE, "/proc/${pid}/status")){
-                        while (<FILE>){
-                                if (/^Name:\W+(.*)/) {
-                                        $testcmd = $1;
-                                }
-                        }
-                        close FILE;
-                }
-                if (open(FILE, "/proc/${pid}/status")) {
-                        while (<FILE>) {
-                                my ($key, $val) = split(":", $_, 2);
-                                if ($key eq 'VmRSS') {
-					$val =~ /\s*([0-9]*)\s+kB/;
-					# Convert kB to B
-                                        $memory = $1*1024;
-                                        last;
-                                }
-                        }
-                        close(FILE);
-                }
-                if ($testcmd =~ /$exename/){
-			$status = "\"servicename\":\"$cmd\",\"state\":1,\"pid\":$pid,\"memory\":$memory";
-		}
-        }
-        return $status;
+	# Return the status.
+	return $status;
 }
 
-sub isautorun {
-        my $cmd = $_[0];
-
-        # Init directory.
-	my $initdir = "/etc/rc.d/rc3.d/";
-
-        return &find_init("$cmd", "$initdir") ? 1 : 0;
-}
-
-sub find_init {
-	my ($cmd, $dir) = @_;
-
-	# Open given init directory.
-	opendir (INITDIR, "$dir") || die "Cannot opendir $dir: $!";
-
-	# Read-in init files from directory.
-	my @inits = readdir(INITDIR);
-
-	# Close directory handle.
-	closedir(INITDIR);
-
-	# Loop through the directory.
-	foreach my $init (@inits) {
-		# Check if the current processed file belongs to the given command.
-		if ($init =~ /S\d+\d+$cmd\z/) {
-			# Found, return "1" - True.
-			return "1";
-		}
-        }
-
-	# Nothing found, return nothing.
-	return;
-}
-
-sub addonservicestats {
-        my $cmd = $_[0];
-        my $status = "0";
-        my $pid = '';
+sub addonservicestats() {
+        my ($pak, $service) = @_;
         my $testcmd = '';
         my $exename;
         my @memory = (0);
 
-        $testcmd = `/usr/local/bin/addonctrl $cmd status 2>/dev/null`;
+        my @testcmd = &General::system_output("/usr/local/bin/addonctrl", "$pak", "status", "$service");
+	my $testcmd = @testcmd[0];
 
+        my $status = "\"state\":0";
         if ( $testcmd =~ /is\ running/ && $testcmd !~ /is\ not\ running/){
-                $status = "\"state\":1";
-
                 $testcmd =~ s/.* //gi;
                 $testcmd =~ s/[a-z_]//gi;
                 $testcmd =~ s/\[[0-1]\;[0-9]+//gi;
@@ -210,23 +203,12 @@ sub addonservicestats {
                 $testcmd =~ s/  //gi;
                 $testcmd =~ s///gi;
 
-                my @pid = split(/\s/,$testcmd);
-                $status .=",\"pid\":\"$pid[0]\"";
+                my @pids = split(/\s/,$testcmd);
 
-                my $memory = 0;
+                # Fetch the memory consumption
+		my $memory = &General::get_memory_consumption(@pids);
 
-                foreach (@pid){
-                        chomp($_);
-                        if (open(FILE, "/proc/$_/statm")){
-                                my $temp = <FILE>;
-                                @memory = split(/ /,$temp);
-                        }
-                        $memory+=$memory[0];
-                }
-		$memory*=1024;
-                $status .=",\"memory\":$memory";
-        }else{
-                $status = "\"state\":0";
+                $status = "\"state\":1,\"pids\":[" . join(',', @pids) . "],\"memory\":$memory";
         }
         return $status;
 }
