@@ -150,9 +150,10 @@ zabbix_export:
           preprocessing:
             - type: REGEX
               parameters:
-                - 'Core-Update available: (.*)'
+                - 'Core-Update available: (yes|no)'
                 - \1
-              error_handler: DISCARD_VALUE
+              error_handler: CUSTOM_ERROR
+              error_handler_params: 'Unable to parse input'
             - type: JAVASCRIPT
               parameters:
                 - |
