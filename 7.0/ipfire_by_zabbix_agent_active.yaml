@@ -1156,17 +1156,17 @@ zabbix_export:
                   value: service
                 - tag: service
                   value: openvpn
-          trigger_prototypes:
-            - uuid: 16156984f21243a09a9c486e28dafd01
-              expression: '(nodata(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.get[{#SINGLETON}],5m)=1 or time()-last(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.timestamp[{#SINGLETON}])>5m)'
-              name: 'IPFire: OpenVPN: Statusreport outdated'
-              priority: AVERAGE
-              description: |
-                Did not receive a recent OpenVPN status report. OpenVPN client data is probably outdated and/or inaccurate.
-                Check if Zabbix Agent is running and properly configured to send OpenVPN status reports (UserParameter: ipfire.ovpn.statusreport.get) and/or OpenVPN server configuration is the IPFire default.
-              tags:
-                - tag: scope
-                  value: availability
+              trigger_prototypes:
+                - uuid: 16156984f21243a09a9c486e28dafd01
+                  expression: '(nodata(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.timestamp[{#SINGLETON}],5m)=1 or time()-last(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.timestamp[{#SINGLETON}])>5m)'
+                  name: 'IPFire: OpenVPN: Statusreport outdated'
+                  priority: AVERAGE
+                  description: |
+                    Did not receive a recent OpenVPN status report. OpenVPN client data is probably outdated and/or inaccurate.
+                    Check if Zabbix Agent is running and properly configured to send OpenVPN status reports (UserParameter: ipfire.ovpn.statusreport.get) and/or OpenVPN server configuration is the IPFire default.
+                  tags:
+                    - tag: scope
+                      value: availability
           master_item:
             key: ipfire.services
           lld_macro_paths:
