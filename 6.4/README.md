@@ -19,9 +19,9 @@ Use in conjunction with a default Template OS Linux-template for CPU/Memory/Stor
 
 This template was created for:
 
-- IPFire 2.29 - Core update 185
+- IPFire 2.29 - Core update 189
 
-**Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
+**Warning**: This template will *NOT* work on earlier versions of IPFire.
 
 ## Author
 
@@ -31,11 +31,12 @@ Robin Roevens
 
 - Install and configure [IPFire addon `zabbix_agentd`](https://wiki.ipfire.org/addons/zabbix_agentd) using Pakfire
 - Make sure the IPFire builtin specific userparameters are enabled in `/etc/zabbix_agentd/zabbix_agentd.conf` (which should be by default)
-- Copy `template_ipfire_services.conf` into the folder with Zabbix agent configuration (`/etc/zabbix_agentd/zabbix_agentd.d/` on IPFire)
-- Copy `ipfire_services.pl` into the folder with Zabbix agent scripts (`/etc/zabbix_agentd/scripts/` on IPFire) and make it executable for user `root`.
-- Unless you have your own custom sudoers config for zabbix; Copy `zabbix_agentd_user` into the folder with sudoers configuration (`/etc/sudoers.d`) to allow Zabbix agent to run `ipfire_services.pl` as root user.
-  Otherwise, make sure the contents of `zabbix_agentd_user` from this template are added to your custom `/etc/sudoers.d/zabbix_agentd_user` file.
-- Restart Zabbix agent.
+
+### Upgrade note:
+This template no longer requires a custom script to be installed for the discovery and monitoring of IPFire services as this is now natively supported by the IPFire zabbix_agentd addon since Core Update 189. So when ugrading this template, you should also delete the now deprecated custom script and userparameter-config from your IPFire instance:
+  * `/etc/zabbix_agentd/script/ipfire_services.pl`
+  * `/etc/zabbix_agentd/zabbix_agentd.d/template_ipfire_services.conf`
+And remove the script from the `/etc/sudoers.d/zabbix_agentd_user` file.
 
 ## Zabbix configuration
 

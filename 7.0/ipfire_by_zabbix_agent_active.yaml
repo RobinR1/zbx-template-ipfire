@@ -1,13 +1,13 @@
 zabbix_export:
-  version: '6.0'
-  date: '2024-10-17T17:27:17Z'
-  groups:
-    - uuid: 6a9e41a5ef934d2196aca8b4abdafff5
-      name: 'OpenVPN Clients'
+  version: '7.0'
+  template_groups:
     - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
       name: Templates/Applications
     - uuid: 57b7ae836ca64446ba2c296389c009b7
       name: Templates/Modules
+  host_groups:
+    - uuid: 6a9e41a5ef934d2196aca8b4abdafff5
+      name: 'OpenVPN Clients'
   templates:
     - uuid: 80543e3dcb9641a8a5a33554ad6638a9
       template: 'IPFire by Zabbix agent active'
@@ -23,6 +23,9 @@ zabbix_export:
         Don't forget to restart zabbix-agent.
         
         Created by Robin Roevens (robin.roevens (at) disroot.org)
+      vendor:
+        name: RobinR1
+        version: 7.0-0.5
       groups:
         - name: Templates/Applications
       items:
@@ -53,8 +56,8 @@ zabbix_export:
           type: ZABBIX_ACTIVE
           key: ipfire.net.fw.hits.raw
           history: '0'
-          trends: '0'
           value_type: TEXT
+          trends: '0'
           description: 'Raw data item for retrieving firewall hits on all forwarding chains'
           tags:
             - tag: component
@@ -99,9 +102,10 @@ zabbix_export:
           type: ZABBIX_ACTIVE
           key: ipfire.services.get
           history: '0'
-          trends: '0'
           value_type: TEXT
+          trends: '0'
           description: 'Get state of IPFire service'
+          timeout: 10s
           tags:
             - tag: component
               value: raw
@@ -363,8 +367,9 @@ zabbix_export:
           key: pakfire.status
           delay: 10m
           history: '0'
-          trends: '0'
           value_type: TEXT
+          trends: '0'
+          timeout: 10s
           tags:
             - tag: component
               value: raw
@@ -523,6 +528,8 @@ zabbix_export:
                 value: '{$IPFIRE.FW_CHAIN.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
                 formulaid: B
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           description: 'Discovery of firewall chains in filter table to create "firewall hits" items/chain'
           item_prototypes:
             - uuid: e754323822f04c6b9e2e77bca43344fe
@@ -585,6 +592,8 @@ zabbix_export:
               - macro: '{#STATE}'
                 value: '{$IPFIRE.OVPN.STATE.MATCHES}'
                 formulaid: C
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           description: 'Discovers configured OpenVPN clients'
           host_prototypes:
             - uuid: 37dc62b5f94c4979bfca33e8ab7ae7cb
@@ -627,6 +636,8 @@ zabbix_export:
               - macro: '{#SERVICESTATE}'
                 value: '1'
                 formulaid: B
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           item_prototypes:
             - uuid: ecd52470e79a4a8da9c16a0f069c1714
               name: 'IPFire OpenVPN: CA Cert: Issuer'
@@ -634,8 +645,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.issuer[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'The field identifies the entity that has signed and issued the certificate.'
               preprocessing:
                 - type: JSONPATH
@@ -652,8 +663,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.message[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'Last check result message.'
               preprocessing:
                 - type: JSONPATH
@@ -717,8 +728,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.public_key_algorithm[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'The digital signature algorithm is used to verify the signature of a certificate.'
               preprocessing:
                 - type: JSONPATH
@@ -735,8 +746,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.serial_number[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The serial number is a positive integer assigned by the CA to each certificate. It is unique for each certificate issued by a given CA. Non-conforming CAs may issue certificates with serial numbers that are negative or zero.'
               preprocessing:
                 - type: JSONPATH
@@ -753,8 +764,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.sha1_fingerprint[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The Certificate Signature (SHA1 Fingerprint or Thumbprint) is the hash of the entire certificate in DER form.'
               preprocessing:
                 - type: JSONPATH
@@ -781,8 +792,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.signature_algorithm[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The algorithm identifier for the algorithm used by the CA to sign the certificate.'
               preprocessing:
                 - type: JSONPATH
@@ -799,8 +810,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.subject[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'The field identifies the entity associated with the public key stored in the subject public key field.'
               preprocessing:
                 - type: JSONPATH
@@ -817,8 +828,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.validation[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The certificate validation result. Possible values: valid/invalid/valid-but-self-signed'
               preprocessing:
                 - type: JSONPATH
@@ -843,8 +854,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert.version[{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The version of the encoded certificate.'
               preprocessing:
                 - type: JSONPATH
@@ -861,8 +872,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cacert[{#SINGLETON}]'
               delay: 15m
               history: '0'
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'Returns the JSON with attributes of the OpenVPN CA certificate.'
               preprocessing:
                 - type: CHECK_JSON_ERROR
@@ -880,8 +891,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.issuer[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'The field identifies the entity that has signed and issued the certificate.'
               preprocessing:
                 - type: JSONPATH
@@ -898,8 +909,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.message[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'Last check result message.'
               preprocessing:
                 - type: JSONPATH
@@ -963,8 +974,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.public_key_algorithm[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'The digital signature algorithm is used to verify the signature of a certificate.'
               preprocessing:
                 - type: JSONPATH
@@ -981,8 +992,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.serial_number[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The serial number is a positive integer assigned by the CA to each certificate. It is unique for each certificate issued by a given CA. Non-conforming CAs may issue certificates with serial numbers that are negative or zero.'
               preprocessing:
                 - type: JSONPATH
@@ -999,8 +1010,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.sha1_fingerprint[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The Certificate Signature (SHA1 Fingerprint or Thumbprint) is the hash of the entire certificate in DER form.'
               preprocessing:
                 - type: JSONPATH
@@ -1027,8 +1038,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.signature_algorithm[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The algorithm identifier for the algorithm used by the CA to sign the certificate.'
               preprocessing:
                 - type: JSONPATH
@@ -1045,8 +1056,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.subject[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'The field identifies the entity associated with the public key stored in the subject public key field.'
               preprocessing:
                 - type: JSONPATH
@@ -1063,8 +1074,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.validation[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The certificate validation result. Possible values: valid/invalid/valid-but-self-signed'
               preprocessing:
                 - type: JSONPATH
@@ -1089,8 +1100,8 @@ zabbix_export:
               key: 'ipfire.ovpn.cert.version[server{#SINGLETON}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: 'The version of the encoded certificate.'
               preprocessing:
                 - type: JSONPATH
@@ -1107,8 +1118,8 @@ zabbix_export:
               key: 'ipfire.ovpn.clientcert[server{#SINGLETON}]'
               delay: 15m
               history: '0'
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'Returns the JSON with attributes of a certificate of the requested site.'
               preprocessing:
                 - type: CHECK_JSON_ERROR
@@ -1147,8 +1158,8 @@ zabbix_export:
               type: ZABBIX_ACTIVE
               key: 'ipfire.ovpn.statusreport.get[{#SINGLETON}]'
               history: '0'
-              trends: '0'
               value_type: TEXT
+              trends: '0'
               description: 'Get OpenVPN status report containing list of connected clients and routing tables'
               preprocessing:
                 - type: DISCARD_UNCHANGED
@@ -1226,6 +1237,8 @@ zabbix_export:
                 value: '{$IPFIRE.SERVICENAME.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
                 formulaid: B
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           item_prototypes:
             - uuid: 64ab99104e5c4a748745fbc1d02b1803
               name: 'IPFire: {#SERVICE}: Memory usage'
@@ -1275,8 +1288,8 @@ zabbix_export:
               key: 'ipfire.services.pids[{#SERVICENAME}]'
               delay: '0'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               preprocessing:
                 - type: JSONPATH
                   parameters:
@@ -1410,6 +1423,9 @@ zabbix_export:
         Monitor an IPFire OpenVPN client
         
         This template is applied to discovered OpenVPN client hosts by the template IPFire by Zabbix agent and is not meant to be applied manually to any hosts.
+      vendor:
+        name: RobinR1
+        version: 7.0-0.1
       groups:
         - name: Templates/Modules
       items:
@@ -1496,8 +1512,8 @@ zabbix_export:
           type: SCRIPT
           key: ipfire.ovpn.client.commonname
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           params: 'return "{$IPFIRE.OVPN.CLIENT.COMMONNAME}";'
           description: 'OpenVPN Client connection name as configured in IPFire WUI'
           inventory_link: ALIAS
@@ -1505,6 +1521,7 @@ zabbix_export:
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
                 - 1d
+          timeout: 3s
           tags:
             - tag: component
               value: system
@@ -1561,7 +1578,7 @@ zabbix_export:
           preprocessing:
             - type: CHECK_NOT_SUPPORTED
               parameters:
-                - ''
+                - '-1'
               error_handler: CUSTOM_VALUE
               error_handler_params: '0'
           tags:
@@ -1572,8 +1589,8 @@ zabbix_export:
           type: SCRIPT
           key: ipfire.ovpn.client.name
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           params: 'return "{$IPFIRE.OVPN.CLIENT.NAME}";'
           description: 'OpenVPN Client name as configured in IPFire WUI'
           inventory_link: NAME
@@ -1581,6 +1598,7 @@ zabbix_export:
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
                 - 1d
+          timeout: 3s
           tags:
             - tag: component
               value: system
@@ -1590,8 +1608,8 @@ zabbix_export:
           key: ipfire.ovpn.client.real_address
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: 'Real IP address of client'
           preprocessing:
             - type: JSONPATH
@@ -1620,8 +1638,8 @@ zabbix_export:
           type: SCRIPT
           key: ipfire.ovpn.client.remark
           history: 7d
-          trends: '0'
           value_type: TEXT
+          trends: '0'
           params: 'return "{$IPFIRE.OVPN.CLIENT.REMARK}";'
           description: 'OpenVPN Client remark as configured in IPFire WUI'
           inventory_link: NOTES
@@ -1629,6 +1647,7 @@ zabbix_export:
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
                 - 1d
+          timeout: 3s
           tags:
             - tag: component
               value: system
@@ -1659,6 +1678,7 @@ zabbix_export:
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
                 - 1d
+          timeout: 3s
           tags:
             - tag: component
               value: system
@@ -1667,8 +1687,8 @@ zabbix_export:
           type: SCRIPT
           key: ipfire.ovpn.client.type
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           params: 'return "{$IPFIRE.OVPN.CLIENT.TYPE}";'
           description: 'OpenVPN Client type'
           inventory_link: TYPE
@@ -1678,6 +1698,7 @@ zabbix_export:
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
                 - 1d
+          timeout: 3s
           tags:
             - tag: component
               value: system
@@ -1687,8 +1708,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.issuer
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: TEXT
+          trends: '0'
           description: 'The field identifies the entity that has signed and issued the certificate.'
           preprocessing:
             - type: JSONPATH
@@ -1705,8 +1726,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.message
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: TEXT
+          trends: '0'
           description: 'Last check result message.'
           preprocessing:
             - type: JSONPATH
@@ -1770,8 +1791,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.public_key_algorithm
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: 'The digital signature algorithm is used to verify the signature of a certificate.'
           preprocessing:
             - type: JSONPATH
@@ -1788,8 +1809,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.serial_number
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: 'The serial number is a positive integer assigned by the CA to each certificate. It is unique for each certificate issued by a given CA. Non-conforming CAs may issue certificates with serial numbers that are negative or zero.'
           preprocessing:
             - type: JSONPATH
@@ -1806,8 +1827,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.sha1_fingerprint
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: 'The Certificate Signature (SHA1 Fingerprint or Thumbprint) is the hash of the entire certificate in DER form.'
           preprocessing:
             - type: JSONPATH
@@ -1835,8 +1856,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.signature_algorithm
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: 'The algorithm identifier for the algorithm used by the CA to sign the certificate.'
           preprocessing:
             - type: JSONPATH
@@ -1853,8 +1874,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.subject
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: TEXT
+          trends: '0'
           description: 'The field identifies the entity associated with the public key stored in the subject public key field.'
           preprocessing:
             - type: JSONPATH
@@ -1871,8 +1892,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.validation
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: 'The certificate validation result. Possible values: valid/invalid/valid-but-self-signed'
           preprocessing:
             - type: JSONPATH
@@ -1898,8 +1919,8 @@ zabbix_export:
           key: ipfire.ovpn.clientcert.version
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: 'The version of the encoded certificate.'
           preprocessing:
             - type: JSONPATH
@@ -1915,8 +1936,8 @@ zabbix_export:
           key: 'ipfire.ovpn.clientcert[{$IPFIRE.OVPN.CLIENT.NAME}]'
           delay: 15m
           history: '0'
-          trends: '0'
           value_type: TEXT
+          trends: '0'
           description: 'Returns the JSON with attributes of a certificate of the requested site.'
           preprocessing:
             - type: CHECK_JSON_ERROR
@@ -1952,8 +1973,8 @@ zabbix_export:
           key: ipfire.ovpn.routing_table.virtual_address
           delay: '0'
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: 'Virtual IP address of client'
           preprocessing:
             - type: JSONPATH
@@ -1972,8 +1993,8 @@ zabbix_export:
           name: 'OpenVPN Client: Statusreport: Get'
           key: ipfire.ovpn.statusreport.get
           history: '0'
-          trends: '0'
           value_type: TEXT
+          trends: '0'
           description: 'Get OpenVPN status report containing list of connected clients and routing tables'
           preprocessing:
             - type: DISCARD_UNCHANGED
