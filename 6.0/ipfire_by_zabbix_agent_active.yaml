@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2024-08-30T22:35:00Z'
+  date: '2024-10-17T17:27:17Z'
   groups:
     - uuid: 6a9e41a5ef934d2196aca8b4abdafff5
       name: 'OpenVPN Clients'
@@ -97,14 +97,44 @@ zabbix_export:
         - uuid: a01561b00aab4406a38e34440658848d
           name: 'IPFire: Services: Get'
           type: ZABBIX_ACTIVE
-          key: ipfire.services
+          key: ipfire.services.get
           history: '0'
           trends: '0'
           value_type: TEXT
-          description: 'Get a list of IPFire service using agent script ipfire_services.pl'
+          description: 'Get state of IPFire service'
           tags:
             - tag: component
               value: raw
+        - uuid: f34db223c2b84e14b3ceb6a257cfa870
+          name: 'IPFire: Services: Last services refresh'
+          type: DEPENDENT
+          key: ipfire.services.last_refresh
+          delay: '0'
+          history: 1d
+          trends: '0'
+          units: unixtime
+          description: 'Timestamp of last time the services data in Zabbix was refreshed by the agent.'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - 'return Math.floor(Date.now() / 1000)'
+          master_item:
+            key: ipfire.services.get
+          tags:
+            - tag: component
+              value: system
+          triggers:
+            - uuid: b1b626f0761e4755b3c365ad7897d08c
+              expression: 'nodata(/IPFire by Zabbix agent active/ipfire.services.last_refresh,5m)=1'
+              name: 'IPFire: No new services data received'
+              event_name: 'IPFire: No new services data received (no new data for more than 5m)'
+              priority: AVERAGE
+              description: |
+                Unable to renew IPFire services data for at least 5m. 
+                Check zabbix_agentd logging in IPFire system logs for possible reasons.
+              tags:
+                - tag: scope
+                  value: availability
         - uuid: 45efac8b0c984815b9cf5c2790373911
           name: 'IPFire: Core-Update available'
           type: DEPENDENT
@@ -116,9 +146,10 @@ zabbix_export:
           preprocessing:
             - type: REGEX
               parameters:
-                - 'Core-Update available: (.*)'
+                - 'Core-Update available: (yes|no)'
                 - \1
-              error_handler: DISCARD_VALUE
+              error_handler: CUSTOM_ERROR
+              error_handler_params: 'Unable to parse input'
             - type: JAVASCRIPT
               parameters:
                 - |
@@ -1147,19 +1178,19 @@ zabbix_export:
                   value: service
                 - tag: service
                   value: openvpn
-          trigger_prototypes:
-            - uuid: 16156984f21243a09a9c486e28dafd01
-              expression: '(nodata(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.get[{#SINGLETON}],5m)=1 or time()-last(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.timestamp[{#SINGLETON}])>5m)'
-              name: 'IPFire: OpenVPN: Statusreport outdated'
-              priority: AVERAGE
-              description: |
-                Did not receive a recent OpenVPN status report. OpenVPN client data is probably outdated and/or inaccurate.
-                Check if Zabbix Agent is running and properly configured to send OpenVPN status reports (UserParameter: ipfire.ovpn.statusreport.get) and/or OpenVPN server configuration is the IPFire default.
-              tags:
-                - tag: scope
-                  value: availability
+              trigger_prototypes:
+                - uuid: 16156984f21243a09a9c486e28dafd01
+                  expression: '(nodata(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.timestamp[{#SINGLETON}],5m)=1 or time()-last(/IPFire by Zabbix agent active/ipfire.ovpn.statusreport.timestamp[{#SINGLETON}])>5m)'
+                  name: 'IPFire: OpenVPN: Statusreport outdated'
+                  priority: AVERAGE
+                  description: |
+                    Did not receive a recent OpenVPN status report. OpenVPN client data is probably outdated and/or inaccurate.
+                    Check if Zabbix Agent is running and properly configured to send OpenVPN status reports (UserParameter: ipfire.ovpn.statusreport.get) and/or OpenVPN server configuration is the IPFire default.
+                  tags:
+                    - tag: scope
+                      value: availability
           master_item:
-            key: ipfire.services
+            key: ipfire.services.get
           lld_macro_paths:
             - lld_macro: '{#SERVICENAME}'
               path: $.servicename
@@ -1209,7 +1240,7 @@ zabbix_export:
                     - '$[?(@.servicename == "{#SERVICENAME}")].memory.first()'
                   error_handler: DISCARD_VALUE
               master_item:
-                key: ipfire.services
+                key: ipfire.services.get
               tags:
                 - tag: component
                   value: memory
@@ -1232,7 +1263,7 @@ zabbix_export:
                   error_handler: CUSTOM_VALUE
                   error_handler_params: '1'
               master_item:
-                key: ipfire.services
+                key: ipfire.services.get
               tags:
                 - tag: component
                   value: service
@@ -1255,7 +1286,7 @@ zabbix_export:
                   parameters:
                     - 1h
               master_item:
-                key: ipfire.services
+                key: ipfire.services.get
               tags:
                 - tag: component
                   value: os
@@ -1276,7 +1307,7 @@ zabbix_export:
                   parameters:
                     - '$[?(@.servicename == "{#SERVICENAME}")].state.first()'
               master_item:
-                key: ipfire.services
+                key: ipfire.services.get
               tags:
                 - tag: component
                   value: service
@@ -1292,7 +1323,7 @@ zabbix_export:
                     - tag: scope
                       value: availability
           master_item:
-            key: ipfire.services
+            key: ipfire.services.get
           lld_macro_paths:
             - lld_macro: '{#SERVICENAME}'
               path: $.servicename
