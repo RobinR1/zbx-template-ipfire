@@ -40,7 +40,9 @@ And remove the script from the `/etc/sudoers.d/zabbix_agentd_user` file.
 
 ## Zabbix configuration
 
-No specific Zabbix configuration is required
+No specific Zabbix configuration is required.
+
+Note on usage of the Zabbix default Linux by Zabbix agent (active) template: the item `system.sw.packages.get` of that template will fail as IPFire has no package manager that is natively supported by Zabbix Agent. Package management on IPFire is done by pakfire and is monitored separately in this template using the IPFire specific `pakfire.status` item.
 
 ### Macros used
 |Name|Description|Default|
