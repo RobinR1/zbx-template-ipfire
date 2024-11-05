@@ -636,7 +636,6 @@ zabbix_export:
               - macro: '{#SERVICESTATE}'
                 value: '1'
                 formulaid: B
-          lifetime: 30d
           enabled_lifetime_type: DISABLE_NEVER
           item_prototypes:
             - uuid: ecd52470e79a4a8da9c16a0f069c1714
@@ -1237,7 +1236,6 @@ zabbix_export:
                 value: '{$IPFIRE.SERVICENAME.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
                 formulaid: B
-          lifetime: 30d
           enabled_lifetime_type: DISABLE_NEVER
           item_prototypes:
             - uuid: 64ab99104e5c4a748745fbc1d02b1803
