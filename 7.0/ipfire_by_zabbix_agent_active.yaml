@@ -1546,6 +1546,519 @@ zabbix_export:
         - macro: '{$IPFIRE.SERVICENAME.NOT_MATCHES}'
           value: CHANGE_IF_NEEDED
           description: 'Services matching this regex will not be discovered'
+      dashboards:
+        - uuid: 0f62a493631b4a59bf5c86986a8df2c2
+          name: 'IPFire: Overview'
+          pages:
+            - widgets:
+                - type: item
+                  name: 'Internet Gateway'
+                  width: '8'
+                  hide_header: 'YES'
+                  fields:
+                    - type: STRING
+                      name: description
+                      value: 'Internet gateway status'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: ipfire.net.gateway.ping
+                    - type: STRING
+                      name: thresholds.0.color
+                      value: D32F2F
+                    - type: STRING
+                      name: thresholds.0.threshold
+                      value: '0'
+                    - type: STRING
+                      name: thresholds.1.color
+                      value: 2E7D32
+                    - type: STRING
+                      name: thresholds.1.threshold
+                      value: '1'
+                    - type: INTEGER
+                      name: time_h_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: time_size
+                      value: '10'
+                    - type: INTEGER
+                      name: time_v_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: units_bold
+                      value: '0'
+                    - type: INTEGER
+                      name: units_show
+                      value: '0'
+                - type: item
+                  name: 'Reboot required'
+                  'y': '2'
+                  width: '8'
+                  hide_header: 'YES'
+                  fields:
+                    - type: STRING
+                      name: description
+                      value: 'Reboot required'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: pakfire.reboot-required
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: INTEGER
+                      name: show.1
+                      value: '2'
+                    - type: INTEGER
+                      name: show.2
+                      value: '3'
+                    - type: STRING
+                      name: thresholds.0.color
+                      value: 2E7D32
+                    - type: STRING
+                      name: thresholds.0.threshold
+                      value: '0'
+                    - type: STRING
+                      name: thresholds.1.color
+                      value: D32F2F
+                    - type: STRING
+                      name: thresholds.1.threshold
+                      value: '1'
+                    - type: INTEGER
+                      name: time_h_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: time_size
+                      value: '10'
+                    - type: INTEGER
+                      name: time_v_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: units_bold
+                      value: '0'
+                    - type: INTEGER
+                      name: units_show
+                      value: '0'
+                - type: svggraph
+                  name: 'Firewall hits'
+                  'y': '4'
+                  width: '22'
+                  height: '5'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color
+                      value: FF465C
+                    - type: STRING
+                      name: ds.0.items.0
+                      value: 'IPFire: Firewall: Hits on chain *'
+                    - type: INTEGER
+                      name: ds.0.stacked
+                      value: '1'
+                    - type: INTEGER
+                      name: legend
+                      value: '0'
+                    - type: STRING
+                      name: reference
+                      value: QGVQA
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                - type: item
+                  name: 'Line quality'
+                  x: '8'
+                  width: '9'
+                  hide_header: 'YES'
+                  fields:
+                    - type: STRING
+                      name: description
+                      value: 'Line quality'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: STRING
+                      name: down_color
+                      value: 388E3C
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: ipfire.net.gateway.pingtime
+                    - type: INTEGER
+                      name: time_h_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: time_size
+                      value: '10'
+                    - type: INTEGER
+                      name: time_v_pos
+                      value: '2'
+                    - type: STRING
+                      name: updown_color
+                      value: 388E3C
+                    - type: STRING
+                      name: up_color
+                      value: C62828
+                - type: svggraph
+                  name: 'Line quality'
+                  x: '8'
+                  'y': '2'
+                  width: '9'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: axisx
+                      value: '0'
+                    - type: STRING
+                      name: ds.0.color.0
+                      value: 81C784
+                    - type: INTEGER
+                      name: ds.0.dataset_type
+                      value: '0'
+                    - type: ITEM
+                      name: ds.0.itemids.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: ipfire.net.gateway.pingtime
+                    - type: INTEGER
+                      name: lefty
+                      value: '0'
+                    - type: INTEGER
+                      name: legend
+                      value: '0'
+                    - type: STRING
+                      name: reference
+                      value: QJOGG
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                    - type: INTEGER
+                      name: show_problems
+                      value: '1'
+                - type: item
+                  name: 'Open connections'
+                  x: '17'
+                  width: '9'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: decimal_places
+                      value: '0'
+                    - type: STRING
+                      name: description
+                      value: 'Open connections'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: STRING
+                      name: down_color
+                      value: 388E3C
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: 'vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_count"]'
+                    - type: INTEGER
+                      name: time_h_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: time_size
+                      value: '10'
+                    - type: INTEGER
+                      name: time_v_pos
+                      value: '2'
+                    - type: STRING
+                      name: updown_color
+                      value: 388E3C
+                    - type: STRING
+                      name: up_color
+                      value: C62828
+                - type: svggraph
+                  name: 'Open connections'
+                  x: '17'
+                  'y': '2'
+                  width: '9'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: axisx
+                      value: '0'
+                    - type: STRING
+                      name: ds.0.color.0
+                      value: CC6600
+                    - type: INTEGER
+                      name: ds.0.dataset_type
+                      value: '0'
+                    - type: ITEM
+                      name: ds.0.itemids.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: 'vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_count"]'
+                    - type: INTEGER
+                      name: lefty
+                      value: '0'
+                    - type: INTEGER
+                      name: legend
+                      value: '0'
+                    - type: STRING
+                      name: reference
+                      value: DSVZN
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                    - type: INTEGER
+                      name: show_problems
+                      value: '1'
+                - type: svggraph
+                  name: 'IPS Throughput'
+                  x: '22'
+                  'y': '4'
+                  width: '22'
+                  height: '5'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color
+                      value: 00FFBF
+                    - type: STRING
+                      name: ds.0.items.0
+                      value: 'IPFire: Intrusion Prevention System: Throughput: *'
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '3'
+                    - type: INTEGER
+                      name: legend_statistic
+                      value: '1'
+                    - type: STRING
+                      name: reference
+                      value: YWZTO
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                - type: item
+                  name: 'Active DHCP leases'
+                  x: '26'
+                  width: '9'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: decimal_places
+                      value: '0'
+                    - type: STRING
+                      name: description
+                      value: 'Active DHCP leases'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: STRING
+                      name: down_color
+                      value: 388E3C
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: ipfire.dhcpd.clients
+                    - type: INTEGER
+                      name: time_h_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: time_size
+                      value: '10'
+                    - type: INTEGER
+                      name: time_v_pos
+                      value: '2'
+                    - type: STRING
+                      name: updown_color
+                      value: 388E3C
+                    - type: STRING
+                      name: up_color
+                      value: C62828
+                - type: svggraph
+                  name: 'Active DHCP leases'
+                  x: '26'
+                  'y': '2'
+                  width: '9'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: axisx
+                      value: '0'
+                    - type: STRING
+                      name: ds.0.color.0
+                      value: 673AB7
+                    - type: INTEGER
+                      name: ds.0.dataset_type
+                      value: '0'
+                    - type: ITEM
+                      name: ds.0.itemids.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: ipfire.dhcpd.clients
+                    - type: INTEGER
+                      name: lefty
+                      value: '0'
+                    - type: INTEGER
+                      name: legend
+                      value: '0'
+                    - type: STRING
+                      name: reference
+                      value: WFWUZ
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                    - type: INTEGER
+                      name: show_problems
+                      value: '1'
+                - type: item
+                  name: 'Active Captive Portal clients'
+                  x: '35'
+                  width: '9'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: decimal_places
+                      value: '0'
+                    - type: STRING
+                      name: description
+                      value: 'Active Captive Portal clients'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: STRING
+                      name: down_color
+                      value: 388E3C
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: ipfire.captive.clients
+                    - type: INTEGER
+                      name: time_h_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: time_size
+                      value: '10'
+                    - type: INTEGER
+                      name: time_v_pos
+                      value: '2'
+                    - type: STRING
+                      name: updown_color
+                      value: 388E3C
+                    - type: STRING
+                      name: up_color
+                      value: C62828
+                - type: svggraph
+                  name: 'Active Captive Portal users'
+                  x: '35'
+                  'y': '2'
+                  width: '9'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: axisx
+                      value: '0'
+                    - type: STRING
+                      name: ds.0.color.0
+                      value: FFD54F
+                    - type: INTEGER
+                      name: ds.0.dataset_type
+                      value: '0'
+                    - type: ITEM
+                      name: ds.0.itemids.0
+                      value:
+                        host: 'IPFire by Zabbix agent active'
+                        key: ipfire.captive.clients
+                    - type: INTEGER
+                      name: lefty
+                      value: '0'
+                    - type: INTEGER
+                      name: legend
+                      value: '0'
+                    - type: STRING
+                      name: reference
+                      value: XZRAF
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                    - type: INTEGER
+                      name: show_problems
+                      value: '1'
+                - type: dataover
+                  name: 'Pakfire status'
+                  x: '44'
+                  width: '16'
+                  height: '6'
+                  fields:
+                    - type: INTEGER
+                      name: style
+                      value: '1'
+                    - type: INTEGER
+                      name: tags.0.operator
+                      value: '1'
+                    - type: STRING
+                      name: tags.0.tag
+                      value: component
+                    - type: STRING
+                      name: tags.0.value
+                      value: pakfire
+                - type: problems
+                  name: 'Recent problems'
+                  x: '44'
+                  'y': '6'
+                  width: '28'
+                  height: '3'
+                  fields:
+                    - type: STRING
+                      name: reference
+                      value: AEUFI
+                - type: honeycomb
+                  name: 'Services state'
+                  x: '60'
+                  width: '12'
+                  height: '6'
+                  fields:
+                    - type: STRING
+                      name: items.0
+                      value: 'IPFire: *: State'
+                    - type: INTEGER
+                      name: item_tags.0.operator
+                      value: '0'
+                    - type: STRING
+                      name: item_tags.0.tag
+                      value: component
+                    - type: STRING
+                      name: item_tags.0.value
+                      value: service
+                    - type: STRING
+                      name: primary_label
+                      value: '{{ITEM.NAME}.regsub("IPFire: (.*): State", \1)}'
+                    - type: INTEGER
+                      name: primary_label_size
+                      value: '40'
+                    - type: STRING
+                      name: reference
+                      value: COOZL
+                    - type: INTEGER
+                      name: secondary_label_size_type
+                      value: '1'
+                    - type: STRING
+                      name: thresholds.0.color
+                      value: D32F2F
+                    - type: STRING
+                      name: thresholds.0.threshold
+                      value: '0'
+                    - type: STRING
+                      name: thresholds.1.color
+                      value: 2E7D32
+                    - type: STRING
+                      name: thresholds.1.threshold
+                      value: '1'
       valuemaps:
         - uuid: 57ac5ee3ecd34a36a30119db05e5a738
           name: 'Boolean Yes/no'
