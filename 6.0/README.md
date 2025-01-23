@@ -14,12 +14,14 @@ Supports monitoring of:
 - Pakfire status (Installed version, Available update(s))
 - Network stats (Line quality, Open Connections, Firewall hits)
 - OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats, Client/Server/CA Certificate validation)
+- IPS throughput stats (Scanned, Bypassed, Whitelisted)
+- Guardian blocked IPs (count)
 
 Use in conjunction with a default Template OS Linux-template for CPU/Memory/Storage monitoring of the IPFire appliance/instance.
 
 This template was created for:
 
-- IPFire 2.29 - Core update 189
+- IPFire 2.29 - Core update 191
 
 **Warning**: This template will *NOT* work on earlier versions of IPFire.
 
