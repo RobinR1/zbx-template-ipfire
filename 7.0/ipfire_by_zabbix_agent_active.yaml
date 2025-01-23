@@ -1836,6 +1836,24 @@ zabbix_export:
                       name: legend_statistic
                       value: '1'
                     - type: STRING
+                      name: or.0.color
+                      value: 80FF00
+                    - type: STRING
+                      name: or.0.items.0
+                      value: 'IPFire: Intrusion Prevention System: Throughput: Bypassed'
+                    - type: STRING
+                      name: or.1.color
+                      value: 0080FF
+                    - type: STRING
+                      name: or.1.items.0
+                      value: 'IPFire: Intrusion Prevention System: Throughput: Whitelisted'
+                    - type: STRING
+                      name: or.2.color
+                      value: FF0000
+                    - type: STRING
+                      name: or.2.items.0
+                      value: 'IPFire: Intrusion Prevention System: Throughput: Scanned'
+                    - type: STRING
                       name: reference
                       value: YWZTO
                     - type: INTEGER
