@@ -6,7 +6,7 @@ This template monitors an [IPFire](https://www.ipfire.org/) [appliance](https://
 
 ## Overview
 
-For Zabbix version: [6.0](./6.0/), [6.4](./6.4/), [7.0](./7.0/)
+For Zabbix version: [7.0](./7.0/), [7.2](./7.2/)
 
 Supports monitoring of:
 - IPFire general stats (Number of current DHCPd clients)
@@ -21,18 +21,18 @@ Use in conjunction with a default Template OS Linux-template for CPU/Memory/Stor
 
 This template was created for:
 
-- IPFire 2.29 - Core update 191
+- IPFire 2.29 - Core update 191 and higher
 
 **Warning**: This template will *NOT* work on earlier versions of IPFire due to changes to the Zabbix Agent addon.
 
 ![Zabbix 7.0 IPFire host dashboard](./images/IPFire_Zabbix_Host_Dashboard.png)
-*IPFire host dashboard (Zabbix 7.0+)*
+*IPFire host dashboard (Zabbix 7.2+)*
 
 ![Zabbix 7.0 OpenVPN Client host dashboard](./images/IPFire_OpenVPNClient_Host_Dashboard.png)
-*OpenVPN client host dashboard (Zabbix 7.0+)*
+*OpenVPN client host dashboard (Zabbix 7.2+)*
 
 ![image info](./images/IPFire_Zabbix_Dashboard.png)
-*Example Zabbix 7.0 dashboard for an IPFire instance using this template + Zabbix default Linux by Zabbix Agent template*
+*Example Zabbix 7.2 dashboard for an IPFire instance using this template + Zabbix default Linux by Zabbix Agent template*
 
 ## Author
 
