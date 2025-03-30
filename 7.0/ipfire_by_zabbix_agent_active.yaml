@@ -2768,7 +2768,7 @@ zabbix_export:
                       name: units_show
                       value: '0'
                 - type: svggraph
-                  name: 'OpenVPN Client Trafic'
+                  name: 'OpenVPN Client Traffic'
                   'y': '4'
                   width: '38'
                   height: '5'
