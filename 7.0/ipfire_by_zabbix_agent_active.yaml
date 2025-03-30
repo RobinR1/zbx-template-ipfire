@@ -3201,3 +3201,17 @@ zabbix_export:
           item:
             host: 'IPFire by Zabbix agent active'
             key: 'vfs.file.contents["/proc/sys/net/netfilter/nf_conntrack_count"]'
+    - uuid: 0e204a1d9d5e4ef5beebf0385a218256
+      name: 'OpenVPN Client Traffic'
+      graph_items:
+        - color: 29B6F6
+          calc_fnc: ALL
+          item:
+            host: 'IPFire OpenVPN Client by Zabbix agent'
+            key: ipfire.ovpn.client.bytes_in
+        - sortorder: '1'
+          color: 4CAF50
+          calc_fnc: ALL
+          item:
+            host: 'IPFire OpenVPN Client by Zabbix agent'
+            key: ipfire.ovpn.client.bytes_out
