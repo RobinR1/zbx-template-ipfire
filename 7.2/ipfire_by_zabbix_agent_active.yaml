@@ -2215,16 +2215,12 @@ zabbix_export:
             - type: JSONPATH
               parameters:
                 - '$.clients[?(@.common_name == "{$IPFIRE.OVPN.CLIENT.COMMONNAME}")].real_address.first()'
-              error_handler: CUSTOM_VALUE
-              error_handler_params: '0.0.0.0:0'
+              error_handler: DISCARD_VALUE
             - type: REGEX
               parameters:
                 - '^(\d+\.\d+\.\d+\.\d+):\d+$'
                 - \1
-            - type: STR_REPLACE
-              parameters:
-                - 0.0.0.0
-                - ''
+              error_handler: DISCARD_VALUE
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
                 - 1h
@@ -2554,7 +2550,7 @@ zabbix_export:
             - type: JSONPATH
               parameters:
                 - '$.routing_table[?(@.common_name == "{$IPFIRE.OVPN.CLIENT.COMMONNAME}")].virtual_address.first()'
-              error_handler: CUSTOM_VALUE
+              error_handler: DISCARD_VALUE
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
                 - 1h
