@@ -2048,14 +2048,14 @@ zabbix_export:
           type: DEPENDENT
           key: ipfire.ovpn.client.bytes_in
           history: 7d
-          units: b
+          units: bps
           preprocessing:
             - type: JSONPATH
               parameters:
                 - '$.clients[?(@.common_name == "{$IPFIRE.OVPN.CLIENT.COMMONNAME}")].bytes_in.first()'
               error_handler: CUSTOM_VALUE
               error_handler_params: '0'
-            - type: SIMPLE_CHANGE
+            - type: CHANGE_PER_SECOND
           master_item:
             key: ipfire.ovpn.statusreport.get
           tags:
@@ -2083,14 +2083,14 @@ zabbix_export:
           type: DEPENDENT
           key: ipfire.ovpn.client.bytes_out
           history: 7d
-          units: b
+          units: bps
           preprocessing:
             - type: JSONPATH
               parameters:
                 - '$.clients[?(@.common_name == "{$IPFIRE.OVPN.CLIENT.COMMONNAME}")].bytes_out.first()'
               error_handler: CUSTOM_VALUE
               error_handler_params: '0'
-            - type: SIMPLE_CHANGE
+            - type: CHANGE_PER_SECOND
           master_item:
             key: ipfire.ovpn.statusreport.get
           tags:
