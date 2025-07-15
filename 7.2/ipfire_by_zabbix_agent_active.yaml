@@ -8,6 +8,8 @@ zabbix_export:
   host_groups:
     - uuid: 6a9e41a5ef934d2196aca8b4abdafff5
       name: 'OpenVPN Clients'
+    - uuid: c59d4ce44d684a29b3142932c7665f93
+      name: 'WireGuard Peers'
   templates:
     - uuid: 80543e3dcb9641a8a5a33554ad6638a9
       template: 'IPFire by Zabbix agent active'
@@ -197,6 +199,18 @@ zabbix_export:
               tags:
                 - tag: scope
                   value: availability
+        - uuid: 22930115ea704fa7958b5e89db609009
+          name: 'IPFire: WireGuard: # clients connected'
+          type: CALCULATED
+          key: ipfire.wireguard.peers.count
+          history: 7d
+          params: 'sum(last_foreach(/*/ipfire.wireguard.peer.connected?[group="WireGuard Peers"]))'
+          description: 'Number of clients currently connected with WireGuard'
+          tags:
+            - tag: component
+              value: service
+            - tag: service
+              value: wireguard
         - uuid: 45efac8b0c984815b9cf5c2790373911
           name: 'IPFire: Core-Update available'
           type: DEPENDENT
@@ -1477,6 +1491,51 @@ zabbix_export:
             - type: DISCARD_UNCHANGED_HEARTBEAT
               parameters:
                 - 1h
+        - uuid: 9e6744a5b19648d9bd73d5d7e4d7c4d3
+          name: 'WireGuard peers discovery'
+          key: ipfire.wireguard.peers.discovery
+          delay: 1h
+          filter:
+            evaltype: AND
+            conditions:
+              - macro: '{#NAME}'
+                value: '{$IPFIRE.WIREGUARD.NAME.MATCHES}'
+              - macro: '{#NAME}'
+                value: '{$IPFIRE.WIREGUARD.NAME.NOTMATCHES}'
+                operator: NOT_MATCHES_REGEX
+              - macro: '{#STATE}'
+                value: '{$IPFIRE.WIREGUARD.STATE.MATCHES}'
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
+          description: 'Discovers configured WireGuard peers'
+          host_prototypes:
+            - uuid: 6910d490d90c4db791fc63b14651b716
+              host: '{#NAME}'
+              name: '{#NAME}'
+              group_links:
+                - group:
+                    name: 'WireGuard Peers'
+              templates:
+                - name: 'IPFire WireGuard peers by Zabbix agent'
+              macros:
+                - macro: '{$IPFIRE.WIREGUARD.PEER.ID}'
+                  value: '{#ID}'
+                  description: 'WireGuard peer ID'
+                - macro: '{$IPFIRE.WIREGUARD.PEER.NAME}'
+                  value: '{#NAME}'
+                  description: 'WireGuard peer Name'
+                - macro: '{$IPFIRE.WIREGUARD.PEER.REMARK_B64}'
+                  value: '{#REMARK_B64}'
+                  description: 'WireGuard peer remark (base64 encoded)'
+                - macro: '{$IPFIRE.WIREGUARD.PEER.STATE}'
+                  value: '{#STATE}'
+                  description: 'WireGuard peer state'
+                - macro: '{$IPFIRE.WIREGUARD.PEER.TYPE}'
+                  value: '{#TYPE}'
+                  description: 'WireGuard peer type'
+              tags:
+                - tag: type
+                  value: '{#TYPE}'
       tags:
         - tag: class
           value: software
@@ -1516,6 +1575,15 @@ zabbix_export:
         - macro: '{$IPFIRE.SERVICENAME.NOT_MATCHES}'
           value: CHANGE_IF_NEEDED
           description: 'Services matching this regex will not be discovered'
+        - macro: '{$IPFIRE.WIREGUARD.NAME.MATCHES}'
+          value: '^.*$'
+          description: 'WireGuard peers with name matching this regex will be discovered'
+        - macro: '{$IPFIRE.WIREGUARD.NAME.NOTMATCHES}'
+          value: CHANGE_IF_NEEDED
+          description: 'WireGuard peers with common name matching this regex will not be discovered'
+        - macro: '{$IPFIRE.WIREGUARD.STATE.MATCHES}'
+          value: 'on'
+          description: 'WireGuard peers with a state (on/off) matching this regex will be discovered.'
       dashboards:
         - uuid: 0f62a493631b4a59bf5c86986a8df2c2
           name: 'IPFire: Overview'
@@ -3232,59 +3300,514 @@ zabbix_export:
               newvalue: 'not connected'
             - value: '1'
               newvalue: connected
+    - uuid: f8d4dc3994924e6ca28b80048a516f97
+      template: 'IPFire WireGuard peers by Zabbix agent'
+      name: 'IPFire WireGuard peers by Zabbix agent'
+      description: |
+        Monitor an IPFire WireGuard peer
+        
+        This template is applied to discovered WireGuard peer hosts by the template IPFire by Zabbix agent and is not meant to be applied manually to any hosts.
+      groups:
+        - name: Templates/Modules
+      items:
+        - uuid: e24968a5f45340d19a71fdf4b5ad93a3
+          name: 'Client VPN IP Address'
+          type: DEPENDENT
+          key: ipfire.wireguard.peer.allowed_ip
+          history: 7d
+          value_type: CHAR
+          description: 'Virtual IP address of client'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$[?(@.id == "{$IPFIRE.WIREGUARD.PEER.ID}")].allowed_ip.first()'
+              error_handler: CUSTOM_VALUE
+              error_handler_params: 0.0.0.0/0
+            - type: REGEX
+              parameters:
+                - ^(\d+\.\d+\.\d+\.\d+)/\d+$
+                - \1
+              error_handler: DISCARD_VALUE
+            - type: STR_REPLACE
+              parameters:
+                - 0.0.0.0
+                - ''
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1h
+          master_item:
+            key: ipfire.wireguard.statusreport.get
+          tags:
+            - tag: component
+              value: network
+        - uuid: 94a904dfa66b4d148d7461b02a1904d8
+          name: 'Bytes received'
+          type: DEPENDENT
+          key: ipfire.wireguard.peer.bytes_in
+          history: 7d
+          units: bps
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$[?(@.id == "{$IPFIRE.WIREGUARD.PEER.ID}")].bytes_in.first()'
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0'
+            - type: CHANGE_PER_SECOND
+          master_item:
+            key: ipfire.wireguard.statusreport.get
+          tags:
+            - tag: component
+              value: network
+        - uuid: 8ef300ce7901402ab77d7ace33b7e0ac
+          name: 'Bytes received total'
+          type: DEPENDENT
+          key: ipfire.wireguard.peer.bytes_in_total
+          history: 7d
+          units: b
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$[?(@.id == "{$IPFIRE.WIREGUARD.PEER.ID}")].bytes_in.first()'
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0'
+          master_item:
+            key: ipfire.wireguard.statusreport.get
+          tags:
+            - tag: component
+              value: network
+        - uuid: e3d0a8e9bf064a6eb857d0fb5367fb46
+          name: 'Bytes sent'
+          type: DEPENDENT
+          key: ipfire.wireguard.peer.bytes_out
+          history: 7d
+          units: bps
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$[?(@.id == "{$IPFIRE.WIREGUARD.PEER.ID}")].bytes_out.first()'
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0'
+            - type: CHANGE_PER_SECOND
+          master_item:
+            key: ipfire.wireguard.statusreport.get
+          tags:
+            - tag: component
+              value: network
+        - uuid: 4c8195bcfd7b4c85b6a0b4ddfffd2f4d
+          name: 'Bytes sent total'
+          type: DEPENDENT
+          key: ipfire.wireguard.peer.bytes_out_total
+          history: 7d
+          units: b
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$[?(@.id == "{$IPFIRE.WIREGUARD.PEER.ID}")].bytes_out.first()'
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0'
+          master_item:
+            key: ipfire.wireguard.statusreport.get
+          tags:
+            - tag: component
+              value: network
+        - uuid: 3452058225ed48aeb8af6acf2178b424
+          name: 'Client Connection state'
+          type: CALCULATED
+          key: ipfire.wireguard.peer.connected
+          history: 7d
+          params: (now()-last(//ipfire.wireguard.peer.last_handshake))<=120
+          valuemap:
+            name: 'OpenVPN Connection state'
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1h
+          tags:
+            - tag: component
+              value: network
+        - uuid: 02a5d4a4eeb34a368813b4991e943fbb
+          name: 'Client Remote IP Address'
+          type: DEPENDENT
+          key: ipfire.wireguard.peer.endpoint
+          history: 7d
+          value_type: CHAR
+          description: 'Real IP address of client'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$[?(@.id == "{$IPFIRE.WIREGUARD.PEER.ID}")].endpoint.first()'
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0.0.0.0:0'
+            - type: REGEX
+              parameters:
+                - '^(\d+\.\d+\.\d+\.\d+):\d+$'
+                - \1
+            - type: STR_REPLACE
+              parameters:
+                - 0.0.0.0
+                - ''
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1h
+          master_item:
+            key: ipfire.wireguard.statusreport.get
+          tags:
+            - tag: component
+              value: network
+        - uuid: 37b4e0174b46458a8a35a91bcd8006eb
+          name: 'Client Last handshake'
+          type: DEPENDENT
+          key: ipfire.wireguard.peer.last_handshake
+          history: 7d
+          units: unixtime
+          description: 'Timestamp of last client network activity'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$[?(@.id == "{$IPFIRE.WIREGUARD.PEER.ID}")].handshake_timestamp.first()'
+              error_handler: DISCARD_VALUE
+          master_item:
+            key: ipfire.wireguard.statusreport.get
+          tags:
+            - tag: component
+              value: network
+        - uuid: c7ac0138ca63408a9baa5b42b4c5e53b
+          name: 'Client Name'
+          type: SCRIPT
+          key: ipfire.wireguard.peer.name
+          history: 7d
+          value_type: CHAR
+          params: 'return "{$IPFIRE.WIREGUARD.PEER.NAME}";'
+          description: 'OpenVPN Client name as configured in IPFire WUI'
+          inventory_link: NAME
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          timeout: 3s
+          tags:
+            - tag: component
+              value: system
+        - uuid: eb38e0962da2406e93624799aae21ddb
+          name: 'Client Remark'
+          type: SCRIPT
+          key: ipfire.wireguard.peer.remark
+          history: 7d
+          value_type: TEXT
+          params: |
+            // Decode Base64 encoded remark
+            remark = atob("{$IPFIRE.WIREGUARD.PEER.REMARK_B64}")
+            return String.fromCharCode.apply(this, [].slice.call(remark));;
+          description: 'WireGuard peer remark as configured in IPFire WUI'
+          inventory_link: NOTES
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          timeout: 3s
+          tags:
+            - tag: component
+              value: system
+        - uuid: c074f43a78d140fc92f3a32dd55adcca
+          name: 'Client Access status'
+          type: SCRIPT
+          key: ipfire.wireguard.peer.state
+          history: 7d
+          params: 'return "{$IPFIRE.WIREGUARD.PEER.STATE}";'
+          description: 'Whether the client is enabled to access the IPFire WireGuard VPN.'
+          valuemap:
+            name: 'OpenVPN Client access status'
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - 'off'
+                - '0'
+            - type: STR_REPLACE
+              parameters:
+                - 'on'
+                - '1'
+            - type: IN_RANGE
+              parameters:
+                - '0'
+                - '1'
+              error_handler: CUSTOM_ERROR
+              error_handler_params: 'Unknown client state'
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          timeout: 3s
+          tags:
+            - tag: component
+              value: system
+        - uuid: 6f2f895eb28b44908464df07951c3a4f
+          name: 'Client type'
+          type: SCRIPT
+          key: ipfire.wireguard.peer.type
+          history: 7d
+          value_type: CHAR
+          params: 'return "{$IPFIRE.WIREGUARD.PEER.TYPE}";'
+          description: 'WireGuard peer type'
+          inventory_link: TYPE
+          valuemap:
+            name: 'OpenVPN Client type'
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          timeout: 3s
+          tags:
+            - tag: component
+              value: system
+        - uuid: fa1595b9b18845288725b0caae1524cc
+          name: 'Client Statusreport: Get'
+          key: ipfire.wireguard.statusreport.get
+          history: '0'
+          value_type: TEXT
+          description: 'Get WireGuard report containing list of connected peers'
+          preprocessing:
+            - type: DISCARD_UNCHANGED
+          tags:
+            - tag: component
+              value: raw
+      discovery_rules:
+        - uuid: b43e735c4696434399c48adcca946a60
+          name: 'WireGuard Peer: Endpoint location discovery'
+          type: DEPENDENT
+          key: ipfire.wireguard.peer.endpoint.location.discovery
+          lifetime_type: DELETE_IMMEDIATELY
+          item_prototypes:
+            - uuid: d6909f81a89d40afa6285944b048969a
+              name: 'Client Location: get'
+              key: 'ipfire.locationdb.lookup[{#ENDPOINT}]'
+              history: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 1h
+              tags:
+                - tag: component
+                  value: raw
+            - uuid: b6ae669ff65c442592c4229f4cfbe55e
+              name: 'Client Endpoint Location: AS'
+              type: DEPENDENT
+              key: 'ipfire.wireguard.peer.endpoint.location.as[{#ENDPOINT}]'
+              history: 7d
+              value_type: CHAR
+              description: 'Autonomous System where the IP of the WireGuard peer endpoint belongs to.'
+              preprocessing:
+                - type: CHECK_JSON_ERROR
+                  parameters:
+                    - $.error
+                  error_handler: DISCARD_VALUE
+                - type: JSONPATH
+                  parameters:
+                    - '$["{#ENDPOINT}"].as'
+              master_item:
+                key: 'ipfire.locationdb.lookup[{#ENDPOINT}]'
+              tags:
+                - tag: component
+                  value: location
+            - uuid: e25da8015d7f41b8a110162d48ba6a68
+              name: 'Client Endpoint Location: Country'
+              type: DEPENDENT
+              key: 'ipfire.wireguard.peer.endpoint.location.country[{#ENDPOINT}]'
+              history: 7d
+              value_type: CHAR
+              description: 'Country of origin for the IP of the WireGuard peer endpoint'
+              preprocessing:
+                - type: CHECK_JSON_ERROR
+                  parameters:
+                    - $.error
+                  error_handler: DISCARD_VALUE
+                - type: JSONPATH
+                  parameters:
+                    - '$["{#ENDPOINT}"].country'
+              master_item:
+                key: 'ipfire.locationdb.lookup[{#ENDPOINT}]'
+              tags:
+                - tag: component
+                  value: location
+          master_item:
+            key: ipfire.wireguard.statusreport.get
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$[?(@.id == "{$IPFIRE.WIREGUARD.PEER.ID}")].endpoint.first()'
+              error_handler: DISCARD_VALUE
+            - type: REGEX
+              parameters:
+                - '^(\d+\.\d+\.\d+\.\d+):\d+$'
+                - \1
+              error_handler: DISCARD_VALUE
+            - type: JAVASCRIPT
+              parameters:
+                - 'return "[{\"{#ENDPOINT}\": \"" + value + "\"}]";'
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1h
+      tags:
+        - tag: class
+          value: device
+        - tag: target
+          value: ipfire
+        - tag: target
+          value: wireguard-peer
+      macros:
+        - macro: '{$IPFIRE.WIREGUARD.PEER.NAME}'
+          value: FILLED_IN_BY_HOST_DISCOVERY
+          description: 'WireGuard peer Name'
+        - macro: '{$IPFIRE.WIREGUARD.PEER.REMARK}'
+          value: FILLED_IN_BY_HOST_DISCOVERY
+          description: 'WireGuard peer remark (base64 encoded)'
+        - macro: '{$IPFIRE.WIREGUARD.PEER.STATE}'
+          value: FILLED_IN_BY_HOST_DISCOVERY
+          description: 'WireGuard peer state'
+        - macro: '{$IPFIRE.WIREGUARD.PEER.TYPE}'
+          value: FILLED_IN_BY_HOST_DISCOVERY
+          description: 'WireGuard peer type'
+      dashboards:
+        - uuid: d83d28527e64418cb842729b916584dd
+          name: 'WireGuard Peer summary'
+          pages:
+            - widgets:
                 - type: item
-                  name: 'OpenVPN Client State'
-                  x: '55'
-                  width: '17'
+                  name: 'WireGuard Peer name'
+                  width: '32'
                   hide_header: 'YES'
                   fields:
                     - type: ITEM
                       name: itemid.0
                       value:
-                        host: 'IPFire OpenVPN Client by Zabbix agent'
-                        key: ipfire.ovpn.client.state
+                        host: 'IPFire WireGuard peers by Zabbix agent'
+                        key: ipfire.wireguard.peer.name
                     - type: INTEGER
                       name: show.0
                       value: '2'
+                - type: svggraph
+                  name: 'WireGuard Peer Traffic'
+                  'y': '2'
+                  width: '60'
+                  height: '5'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color.0
+                      value: 4CAF50
+                    - type: STRING
+                      name: ds.0.color.1
+                      value: 29B6F6
                     - type: INTEGER
-                      name: show.1
-                      value: '3'
+                      name: ds.0.dataset_type
+                      value: '0'
+                    - type: ITEM
+                      name: ds.0.itemids.0
+                      value:
+                        host: 'IPFire WireGuard peers by Zabbix agent'
+                        key: ipfire.wireguard.peer.bytes_out
+                    - type: ITEM
+                      name: ds.0.itemids.1
+                      value:
+                        host: 'IPFire WireGuard peers by Zabbix agent'
+                        key: ipfire.wireguard.peer.bytes_in
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_statistic
+                      value: '1'
+                    - type: STRING
+                      name: reference
+                      value: DKTEG
+                    - type: INTEGER
+                      name: righty
+                      value: '0'
+                - type: honeycomb
+                  name: 'Access status'
+                  x: '32'
+                  width: '5'
+                  hide_header: 'YES'
+                  fields:
+                    - type: STRING
+                      name: bg_color
+                      value: EF5350
+                    - type: STRING
+                      name: items.0
+                      value: 'Client Access status'
+                    - type: INTEGER
+                      name: primary_label_decimal_places
+                      value: '0'
+                    - type: INTEGER
+                      name: primary_label_type
+                      value: '1'
+                    - type: INTEGER
+                      name: primary_label_units_show
+                      value: '0'
+                    - type: STRING
+                      name: reference
+                      value: QHMMA
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
                     - type: STRING
                       name: thresholds.0.color
-                      value: 4CAF50
+                      value: 43A047
                     - type: STRING
                       name: thresholds.0.threshold
                       value: '1'
+                - type: honeycomb
+                  name: 'Connection state'
+                  x: '37'
+                  width: '5'
+                  hide_header: 'YES'
+                  fields:
+                    - type: STRING
+                      name: bg_color
+                      value: EF5350
+                    - type: STRING
+                      name: items.0
+                      value: 'Client Connection state'
                     - type: INTEGER
-                      name: time_h_pos
-                      value: '2'
-                    - type: INTEGER
-                      name: time_v_pos
-                      value: '2'
-                    - type: INTEGER
-                      name: units_bold
+                      name: primary_label_decimal_places
                       value: '0'
                     - type: INTEGER
-                      name: units_show
+                      name: primary_label_type
+                      value: '1'
+                    - type: INTEGER
+                      name: primary_label_units_show
                       value: '0'
+                    - type: STRING
+                      name: reference
+                      value: JYRPL
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: STRING
+                      name: thresholds.0.color
+                      value: 43A047
+                    - type: STRING
+                      name: thresholds.0.threshold
+                      value: '1'
                 - type: item
-                  name: 'OpenVPN Client Last connection duration'
-                  x: '61'
-                  'y': '2'
-                  width: '11'
+                  name: 'WireGuard Peer VPN IP'
+                  x: '42'
+                  width: '8'
+                  height: '1'
                   hide_header: 'YES'
                   fields:
                     - type: INTEGER
                       name: desc_h_pos
                       value: '0'
                     - type: INTEGER
+                      name: desc_size
+                      value: '25'
+                    - type: INTEGER
                       name: desc_v_pos
                       value: '0'
                     - type: ITEM
                       name: itemid.0
                       value:
-                        host: 'IPFire OpenVPN Client by Zabbix agent'
-                        key: ipfire.ovpn.client.connection.duration
+                        host: 'IPFire WireGuard peers by Zabbix agent'
+                        key: ipfire.wireguard.peer.allowed_ip
                     - type: INTEGER
                       name: show.0
                       value: '1'
@@ -3292,26 +3815,203 @@ zabbix_export:
                       name: show.1
                       value: '2'
                     - type: INTEGER
-                      name: show.2
-                      value: '3'
+                      name: units_bold
+                      value: '0'
                     - type: INTEGER
-                      name: time_h_pos
+                      name: value_size
+                      value: '50'
+                    - type: INTEGER
+                      name: value_v_pos
                       value: '2'
+                - type: item
+                  name: 'WireGuard Peer Remote IP'
+                  x: '42'
+                  'y': '1'
+                  width: '8'
+                  height: '1'
+                  hide_header: 'YES'
+                  fields:
                     - type: INTEGER
-                      name: time_v_pos
+                      name: desc_h_pos
+                      value: '0'
+                    - type: INTEGER
+                      name: desc_size
+                      value: '25'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire WireGuard peers by Zabbix agent'
+                        key: ipfire.wireguard.peer.endpoint
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: INTEGER
+                      name: show.1
                       value: '2'
                     - type: INTEGER
                       name: units_bold
                       value: '0'
+                    - type: INTEGER
+                      name: value_size
+                      value: '50'
+                    - type: INTEGER
+                      name: value_v_pos
+                      value: '2'
+                - type: topitems
+                  name: 'Client Location: Country'
+                  x: '50'
+                  width: '10'
+                  height: '1'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: columns.0.display_value_as
+                      value: '2'
+                    - type: STRING
+                      name: columns.0.items.0
+                      value: 'Client Endpoint Location: Country'
+                    - type: INTEGER
+                      name: host_ordering_limit
+                      value: '1'
+                    - type: INTEGER
+                      name: item_ordering_limit
+                      value: '1'
+                    - type: INTEGER
+                      name: item_ordering_order_by
+                      value: '2'
+                    - type: INTEGER
+                      name: layout
+                      value: '1'
+                    - type: INTEGER
+                      name: problems
+                      value: '2'
+                    - type: INTEGER
+                      name: show_column_header
+                      value: '0'
+                - type: topitems
+                  name: 'Client Location: AS'
+                  x: '50'
+                  'y': '1'
+                  width: '10'
+                  height: '1'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: columns.0.display_value_as
+                      value: '2'
+                    - type: STRING
+                      name: columns.0.items.0
+                      value: 'Client Endpoint Location: AS'
+                    - type: INTEGER
+                      name: host_ordering_limit
+                      value: '1'
+                    - type: INTEGER
+                      name: item_ordering_limit
+                      value: '1'
+                    - type: INTEGER
+                      name: item_ordering_order_by
+                      value: '2'
+                    - type: INTEGER
+                      name: layout
+                      value: '1'
+                    - type: INTEGER
+                      name: problems
+                      value: '2'
+                    - type: INTEGER
+                      name: show_column_header
+                      value: '0'
+                - type: item
+                  name: 'WireGuard Peer: Last activity'
+                  x: '60'
+                  width: '12'
+                  height: '1'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: decimal_size
+                      value: '25'
+                    - type: INTEGER
+                      name: desc_h_pos
+                      value: '0'
+                    - type: INTEGER
+                      name: desc_size
+                      value: '25'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire WireGuard peers by Zabbix agent'
+                        key: ipfire.wireguard.peer.last_handshake
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: INTEGER
+                      name: show.1
+                      value: '2'
+                    - type: INTEGER
+                      name: units_size
+                      value: '25'
+                    - type: INTEGER
+                      name: value_size
+                      value: '35'
+                - type: piechart
+                  name: 'WireGuard Peer total traffic'
+                  x: '60'
+                  'y': '1'
+                  width: '12'
+                  height: '6'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color.0
+                      value: 03A9F4
+                    - type: STRING
+                      name: ds.0.color.1
+                      value: 673AB7
+                    - type: INTEGER
+                      name: ds.0.dataset_type
+                      value: '0'
+                    - type: ITEM
+                      name: ds.0.itemids.0
+                      value:
+                        host: 'IPFire WireGuard peers by Zabbix agent'
+                        key: ipfire.wireguard.peer.bytes_out_total
+                    - type: ITEM
+                      name: ds.0.itemids.1
+                      value:
+                        host: 'IPFire WireGuard peers by Zabbix agent'
+                        key: ipfire.wireguard.peer.bytes_in_total
+                    - type: INTEGER
+                      name: ds.0.type.0
+                      value: '0'
+                    - type: INTEGER
+                      name: ds.0.type.1
+                      value: '0'
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_value
+                      value: '1'
+                    - type: STRING
+                      name: time_period.from
+                      value: now-1y
+                    - type: STRING
+                      name: time_period.to
+                      value: now
       valuemaps:
-        - uuid: 87dfebb2a9784886b12efe44d8044ee3
+        - uuid: d086cb3ffd8d416cafdecc9a989f784c
           name: 'OpenVPN Client access status'
           mappings:
             - value: '0'
               newvalue: disabled
             - value: '1'
               newvalue: enabled
-        - uuid: 142e2748979147cb8b8f887825575a72
+        - uuid: a7a60013f1474989af43b3e3dfdba020
           name: 'OpenVPN Client type'
           mappings:
             - value: host
@@ -3319,7 +4019,7 @@ zabbix_export:
             - type: REGEXP
               value: '^net.*'
               newvalue: 'Remote network'
-        - uuid: 486bcaed8ba049c7b9b7c811482b6ad8
+        - uuid: 68b224e3eb7745428662092e67f58ee6
           name: 'OpenVPN Connection state'
           mappings:
             - value: '0'
@@ -3374,3 +4074,17 @@ zabbix_export:
           item:
             host: 'IPFire OpenVPN Client by Zabbix agent'
             key: ipfire.ovpn.client.bytes_out
+    - uuid: 5fbd46e2ee2a4c55a0d36ce47bcad983
+      name: 'WireGuard peer Traffic'
+      graph_items:
+        - color: 29B6F6
+          calc_fnc: ALL
+          item:
+            host: 'IPFire WireGuard peers by Zabbix agent'
+            key: ipfire.wireguard.peer.bytes_in
+        - sortorder: '1'
+          color: 4CAF50
+          calc_fnc: ALL
+          item:
+            host: 'IPFire WireGuard peers by Zabbix agent'
+            key: ipfire.wireguard.peer.bytes_out
