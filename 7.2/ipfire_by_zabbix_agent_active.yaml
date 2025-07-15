@@ -58,12 +58,43 @@ zabbix_export:
           tags:
             - tag: component
               value: raw
-        - uuid: 2e0173990de34061b2e743ef22518c6a
-          name: 'IPFire: Network: Internet gateway available'
+        - uuid: be8f3086a4224e2b88515c11be4f1cfb
+          name: 'IPFire: Network: Internet gateway available (ARP)'
           type: ZABBIX_ACTIVE
-          key: ipfire.net.gateway.ping
+          key: ipfire.net.gateway.arping
           history: 7d
-          description: 'Checks if the internet gateway on RED is reachable'
+          description: 'Checks if the internet gateway on RED is reachable by ARP ping. This can be used as fallback method on non-PPP connections when the ISP blocks ICMP pings to the gateway'
+          valuemap:
+            name: 'Service state'
+          tags:
+            - tag: component
+              value: gateway
+            - tag: component
+              value: network
+        - uuid: 2356c0ded5ee409895a3f01d7f9e6674
+          name: 'IPFire: Network: Internet gateway ping timings (ARP)'
+          type: ZABBIX_ACTIVE
+          key: ipfire.net.gateway.arpingtime
+          history: 7d
+          value_type: FLOAT
+          units: s
+          description: 'Checks the response time of the internet gateway on RED indicating Line Quality by using ARP ping. This can be used as fallback method on non-PPP connections when the ISP blocks ICMP pings to the gateway'
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.001'
+          tags:
+            - tag: component
+              value: gateway
+            - tag: component
+              value: network
+        - uuid: f5b8933ef8de4ea0a80a243e1e746336
+          name: 'IPFire: Network: Internet gateway available (ICMP/ARP)'
+          type: CALCULATED
+          key: ipfire.net.gateway.available
+          history: 7d
+          params: 'max(last(//ipfire.net.gateway.ping),last(//ipfire.net.gateway.arping))'
+          description: 'Evaluates if the gateway is reachable by either ICMP ping or ARP ping.'
           valuemap:
             name: 'Service state'
           tags:
@@ -73,21 +104,54 @@ zabbix_export:
               value: network
           triggers:
             - uuid: 750db20bec7c46e6ab9943e516f52947
-              expression: 'last(/IPFire by Zabbix agent active/ipfire.net.gateway.ping)<>1'
+              expression: 'last(/IPFire by Zabbix agent active/ipfire.net.gateway.available)<>1'
               name: 'IPFire: Internet Gateway is not reachable'
               priority: HIGH
               description: 'Internet Gateway on interface RED is unreachable. Internet connection is lost or intermittent.'
               tags:
                 - tag: scope
                   value: availability
+        - uuid: 2e0173990de34061b2e743ef22518c6a
+          name: 'IPFire: Network: Internet gateway available (ICMP)'
+          type: ZABBIX_ACTIVE
+          key: ipfire.net.gateway.ping
+          history: 7d
+          description: 'Checks if the internet gateway on RED is reachable'
+          valuemap:
+            name: 'Service state'
+          timeout: 10s
+          tags:
+            - tag: component
+              value: gateway
+            - tag: component
+              value: network
         - uuid: f548b019c57a42cd8b6d4cf0a244f098
-          name: 'IPFire: Network: Internet gateway ping timings'
+          name: 'IPFire: Network: Internet gateway ping timings (ICMP)'
           type: ZABBIX_ACTIVE
           key: ipfire.net.gateway.pingtime
           history: 7d
           value_type: FLOAT
-          units: ms
+          units: s
           description: 'Checks the response time of the internet gateway on RED indicating Line Quality.'
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.001'
+          timeout: 7s
+          tags:
+            - tag: component
+              value: gateway
+            - tag: component
+              value: network
+        - uuid: 8d454afd789142138aa60b7ae9e02377
+          name: 'IPFire: Network: Internet gateway ping timings (ICMP/ARP)'
+          type: CALCULATED
+          key: ipfire.net.gateway.timing
+          history: 7d
+          value_type: FLOAT
+          units: s
+          params: '(last(//ipfire.net.gateway.pingtime) <> 0) * last(//ipfire.net.gateway.pingtime) + (last(//ipfire.net.gateway.pingtime) = 0) * last(//ipfire.net.gateway.arpingtime)'
+          description: 'Checks the response time of the internet gateway on RED indicating Line Quality by using ICMP ping but falls back to ARP ping when ICMP ping equals zero.'
           tags:
             - tag: component
               value: gateway
@@ -1472,7 +1536,7 @@ zabbix_export:
                       name: itemid.0
                       value:
                         host: 'IPFire by Zabbix agent active'
-                        key: ipfire.net.gateway.ping
+                        key: ipfire.net.gateway.available
                     - type: STRING
                       name: thresholds.0.color
                       value: D32F2F
@@ -1596,7 +1660,7 @@ zabbix_export:
                       name: itemid.0
                       value:
                         host: 'IPFire by Zabbix agent active'
-                        key: ipfire.net.gateway.pingtime
+                        key: ipfire.net.gateway.timing
                     - type: INTEGER
                       name: show.0
                       value: '1'
