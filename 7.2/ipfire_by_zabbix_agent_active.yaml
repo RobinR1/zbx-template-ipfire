@@ -16,11 +16,8 @@ zabbix_export:
         Monitor an IPFire appliance
         
         Requirements for template operation:
-        1.Install Zabbix agent addon using Pakfire
-        2.Copy zabbix_agentd_user sudoers-file into /etc/sudoers.d
-        3.Copy ipfire_services.pl into /etc/zabbix_agentd/scripts and make sure it is executable by the root user.
-        4.Copy template_ipfire_services.conf into /etc/zabbix_agentd/zabbix_agentd.d/. 
-        Don't forget to restart zabbix-agent.
+        Install and configure IPFire zabbix_agentd addon.
+        See: https://www.ipfire.org/docs/addons/zabbix_agentd for details
         
         Created by Robin Roevens (robin.roevens (at) disroot.org)
       vendor:
@@ -1929,6 +1926,9 @@ zabbix_export:
                     - type: STRING
                       name: reference
                       value: COOZL
+                    - type: INTEGER
+                      name: secondary_label_decimal_places
+                      value: '0'
                     - type: INTEGER
                       name: secondary_label_size_type
                       value: '1'
