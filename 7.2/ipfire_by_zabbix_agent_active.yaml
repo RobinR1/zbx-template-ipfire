@@ -2570,6 +2570,83 @@ zabbix_export:
           tags:
             - tag: component
               value: raw
+      discovery_rules:
+        - uuid: 769189ed23ba4618ac2add6ad87497dd
+          name: 'OpenVPN Client: Endpoint location discovery'
+          type: DEPENDENT
+          key: ipfire.ovpn.client.endpoint.location.discovery
+          lifetime_type: DELETE_IMMEDIATELY
+          item_prototypes:
+            - uuid: 7b6441be5b4d4473bfea9a9845c0068e
+              name: 'Client Location: get'
+              key: 'ipfire.locationdb.lookup[{#ENDPOINT}]'
+              history: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 1h
+              tags:
+                - tag: component
+                  value: raw
+            - uuid: 1d5a9e4ca3624d14861e441a4593495d
+              name: 'Client Endpoint Location: AS'
+              type: DEPENDENT
+              key: 'ipfire.ovpn.client.endpoint.location.as[{#ENDPOINT}]'
+              history: 7d
+              value_type: CHAR
+              description: 'Autonomous System where the IP of the WireGuard peer endpoint belongs to.'
+              preprocessing:
+                - type: CHECK_JSON_ERROR
+                  parameters:
+                    - $.error
+                  error_handler: DISCARD_VALUE
+                - type: JSONPATH
+                  parameters:
+                    - '$["{#ENDPOINT}"].as'
+              master_item:
+                key: 'ipfire.locationdb.lookup[{#ENDPOINT}]'
+              tags:
+                - tag: component
+                  value: location
+            - uuid: e4592357a0024a17930429a9e88c0834
+              name: 'Client Endpoint Location: Country'
+              type: DEPENDENT
+              key: 'ipfire.ovpn.client.endpoint.location.country[{#ENDPOINT}]'
+              history: 7d
+              value_type: CHAR
+              description: 'Country of origin for the IP of the OpenVPN Client endpoint'
+              preprocessing:
+                - type: CHECK_JSON_ERROR
+                  parameters:
+                    - $.error
+                  error_handler: DISCARD_VALUE
+                - type: JSONPATH
+                  parameters:
+                    - '$["{#ENDPOINT}"].country'
+              master_item:
+                key: 'ipfire.locationdb.lookup[{#ENDPOINT}]'
+              tags:
+                - tag: component
+                  value: location
+          master_item:
+            key: ipfire.ovpn.statusreport.get
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.clients[?(@.common_name == "{$IPFIRE.OVPN.CLIENT.COMMONNAME}")].real_address.first()'
+              error_handler: DISCARD_VALUE
+            - type: REGEX
+              parameters:
+                - '^(\d+\.\d+\.\d+\.\d+):\d+$'
+                - \1
+              error_handler: DISCARD_VALUE
+            - type: JAVASCRIPT
+              parameters:
+                - 'return "[{\"{#ENDPOINT}\": \"" + value + "\"}]";'
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1h
       tags:
         - tag: class
           value: device
