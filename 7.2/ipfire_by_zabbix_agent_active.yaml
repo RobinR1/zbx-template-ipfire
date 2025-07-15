@@ -2044,7 +2044,7 @@ zabbix_export:
         - name: Templates/Modules
       items:
         - uuid: 713f21c4059a452d8aa6746dbb4c024d
-          name: 'OpenVPN Client: Bytes received'
+          name: 'Bytes received'
           type: DEPENDENT
           key: ipfire.ovpn.client.bytes_in
           history: 7d
@@ -2062,7 +2062,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: 57993d21e1d04b319b4adc5f70385a30
-          name: 'OpenVPN Client: Bytes received total'
+          name: 'Bytes received total'
           type: DEPENDENT
           key: ipfire.ovpn.client.bytes_in_total
           history: 7d
@@ -2079,7 +2079,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: 130de3a8a8bf4e4987ac563eabb88602
-          name: 'OpenVPN Client: Bytes sent'
+          name: 'Bytes sent'
           type: DEPENDENT
           key: ipfire.ovpn.client.bytes_out
           history: 7d
@@ -2097,7 +2097,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: 81bdb6e42bdd46a58308531d0cffac32
-          name: 'OpenVPN Client: Bytes sent total'
+          name: 'Bytes sent total'
           type: DEPENDENT
           key: ipfire.ovpn.client.bytes_out_total
           history: 7d
@@ -2114,7 +2114,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: bead53bd8f1f4382b4c36733db3ab0f3
-          name: 'OpenVPN Client: Common name'
+          name: 'Client Common name'
           type: SCRIPT
           key: ipfire.ovpn.client.commonname
           history: 7d
@@ -2131,7 +2131,7 @@ zabbix_export:
             - tag: component
               value: system
         - uuid: e035d6315a7e4403a25185d17bbe6489
-          name: 'OpenVPN Client: Connection state'
+          name: 'Client Connection state'
           type: DEPENDENT
           key: ipfire.ovpn.client.connected
           history: 7d
@@ -2151,7 +2151,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: 8b0ba4b88ae549a0a4a2346e1cf40133
-          name: 'OpenVPN Client: Last connection time'
+          name: 'Client Last connection time'
           type: DEPENDENT
           key: ipfire.ovpn.client.connected_since
           history: 7d
@@ -2171,7 +2171,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: add7fbf01d384c0bab9ded620fa9f958
-          name: 'OpenVPN Client: Last connection duration'
+          name: 'Client Last connection duration'
           type: CALCULATED
           key: ipfire.ovpn.client.connection.duration
           history: 7d
@@ -2188,7 +2188,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: 12b42114672c4f698fa3e9407d0f0346
-          name: 'OpenVPN Client: Name'
+          name: 'Client Name'
           type: SCRIPT
           key: ipfire.ovpn.client.name
           history: 7d
@@ -2205,7 +2205,7 @@ zabbix_export:
             - tag: component
               value: system
         - uuid: fd22e3d29b4c4c358c77d100cd412990
-          name: 'OpenVPN Client: Remote IP Address'
+          name: 'Client Remote IP Address'
           type: DEPENDENT
           key: ipfire.ovpn.client.real_address
           history: 7d
@@ -2234,7 +2234,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: 7eeabe63f0ba4f3dbd32403ed37c5acb
-          name: 'OpenVPN Client: Remark'
+          name: 'Client Remark'
           type: SCRIPT
           key: ipfire.ovpn.client.remark
           history: 7d
@@ -2251,7 +2251,7 @@ zabbix_export:
             - tag: component
               value: system
         - uuid: 108aef4c2b184624a00961f5b64500c4
-          name: 'OpenVPN Client: Access status'
+          name: 'Client Access status'
           type: SCRIPT
           key: ipfire.ovpn.client.state
           history: 7d
@@ -2282,7 +2282,7 @@ zabbix_export:
             - tag: component
               value: system
         - uuid: 08411efa83e3490da6858c96fe8e406f
-          name: 'OpenVPN Client: Client type'
+          name: 'Client type'
           type: SCRIPT
           key: ipfire.ovpn.client.type
           history: 7d
@@ -2301,7 +2301,7 @@ zabbix_export:
             - tag: component
               value: system
         - uuid: db6227665ba04e148dedfba12ac450c4
-          name: 'OpenVPN Client: Cert: Issuer'
+          name: 'Client Cert: Issuer'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.issuer
           history: 7d
@@ -2317,7 +2317,7 @@ zabbix_export:
             - tag: component
               value: cert
         - uuid: b0174d18778c4d8b8d9a220fda660096
-          name: 'OpenVPN Client: Cert: Last validation status'
+          name: 'Client Cert: Last validation status'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.message
           history: 7d
@@ -2333,7 +2333,7 @@ zabbix_export:
             - tag: component
               value: cert
         - uuid: 244fd75a9580427589d26396d3f9efb6
-          name: 'OpenVPN Client: Cert: Expires on'
+          name: 'Client Cert: Expires on'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.not_after
           history: 7d
@@ -2362,7 +2362,7 @@ zabbix_export:
                 - tag: scope
                   value: notice
         - uuid: cb798f86f6894878965213cd4ed0b10b
-          name: 'OpenVPN Client: Cert: Valid from'
+          name: 'Client Cert: Valid from'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.not_before
           history: 7d
@@ -2378,7 +2378,7 @@ zabbix_export:
             - tag: component
               value: cert
         - uuid: d5773a7618a348b4ac1e0065f79587a6
-          name: 'OpenVPN Client: Cert: Public key algorithm'
+          name: 'Client Cert: Public key algorithm'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.public_key_algorithm
           history: 7d
@@ -2394,7 +2394,7 @@ zabbix_export:
             - tag: component
               value: cert
         - uuid: 678e46dfa08f49d9a98f55d196904317
-          name: 'OpenVPN Client: Cert: Serial number'
+          name: 'Client Cert: Serial number'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.serial_number
           history: 7d
@@ -2410,7 +2410,7 @@ zabbix_export:
             - tag: component
               value: cert
         - uuid: d841e1b51324411c940328a6d4038ae0
-          name: 'OpenVPN Client: Cert: Fingerprint'
+          name: 'Client Cert: Fingerprint'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.sha1_fingerprint
           history: 7d
@@ -2437,7 +2437,7 @@ zabbix_export:
                 - tag: scope
                   value: notice
         - uuid: 9af3911b12414e4d89f55d3d8c94a56b
-          name: 'OpenVPN Client: Cert: Signature algorithm'
+          name: 'Client Cert: Signature algorithm'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.signature_algorithm
           history: 7d
@@ -2453,7 +2453,7 @@ zabbix_export:
             - tag: component
               value: cert
         - uuid: 89bb1bc5d56046389152c082b29441d8
-          name: 'OpenVPN Client: Cert: Subject'
+          name: 'Client Cert: Subject'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.subject
           history: 7d
@@ -2469,7 +2469,7 @@ zabbix_export:
             - tag: component
               value: cert
         - uuid: e660e5e152364662b30d27bb5d2cbcc8
-          name: 'OpenVPN Client: Cert: Validation result'
+          name: 'Client Cert: Validation result'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.validation
           history: 7d
@@ -2494,7 +2494,7 @@ zabbix_export:
                 - tag: scope
                   value: security
         - uuid: abcc7aca88094244a149bfaad890f5bb
-          name: 'OpenVPN Client: Cert: Version'
+          name: 'Client Cert: Version'
           type: DEPENDENT
           key: ipfire.ovpn.clientcert.version
           history: 7d
@@ -2510,7 +2510,7 @@ zabbix_export:
             - tag: component
               value: cert
         - uuid: e0bea7e224884143aeba3a008fa892c2
-          name: 'OpenVPN Client: Cert: Get'
+          name: 'Client Cert: Get'
           key: 'ipfire.ovpn.clientcert[{$IPFIRE.OVPN.CLIENT.NAME}]'
           delay: 15m
           history: '0'
@@ -2527,7 +2527,7 @@ zabbix_export:
             - tag: component
               value: raw
         - uuid: 175a8220c2e04e42884e1a5b67de263f
-          name: 'OpenVPN Client: Last activity'
+          name: 'Client Last activity'
           type: DEPENDENT
           key: ipfire.ovpn.routing_table.last_ref
           history: 7d
@@ -2544,7 +2544,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: c1c65e8f92b84008a69eb40db7907d61
-          name: 'OpenVPN Client: VPN IP Address'
+          name: 'Client VPN IP Address'
           type: DEPENDENT
           key: ipfire.ovpn.routing_table.virtual_address
           history: 7d
@@ -2564,7 +2564,7 @@ zabbix_export:
             - tag: component
               value: network
         - uuid: 5c6b95eedb1a47d99dfba1bb092d56bf
-          name: 'OpenVPN Client: Statusreport: Get'
+          name: 'Client Statusreport: Get'
           key: ipfire.ovpn.statusreport.get
           history: '0'
           value_type: TEXT
