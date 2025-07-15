@@ -14,6 +14,7 @@ Supports monitoring of:
 - Pakfire status (Installed version, Available update(s))
 - Network stats (Line quality, Open Connections, Firewall hits)
 - OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats, Client/Server/CA Certificate validation)
+- WireGuard peers and stats (WireGuard peer discovery, WireGuard client properties, Traffic stats)
 - IPS throughput stats (Scanned, Bypassed, Whitelisted)
 - Guardian blocked IPs (count)
 
