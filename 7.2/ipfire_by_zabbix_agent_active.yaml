@@ -2680,7 +2680,7 @@ zabbix_export:
             - widgets:
                 - type: item
                   name: 'OpenVPN Client name'
-                  width: '28'
+                  width: '35'
                   hide_header: 'YES'
                   fields:
                     - type: ITEM
@@ -2691,45 +2691,40 @@ zabbix_export:
                     - type: INTEGER
                       name: show.0
                       value: '2'
-                - type: item
-                  name: 'OpenVPN Client Connection state'
+                - type: honeycomb
+                  name: 'Client Connection state'
                   'y': '2'
-                  width: '17'
+                  width: '6'
                   hide_header: 'YES'
                   fields:
-                    - type: ITEM
-                      name: itemid.0
-                      value:
-                        host: 'IPFire OpenVPN Client by Zabbix agent'
-                        key: ipfire.ovpn.client.connected
+                    - type: STRING
+                      name: bg_color
+                      value: EF5350
+                    - type: STRING
+                      name: items.0
+                      value: 'Client Connection state'
+                    - type: INTEGER
+                      name: primary_label_type
+                      value: '1'
+                    - type: INTEGER
+                      name: primary_label_units_show
+                      value: '0'
+                    - type: STRING
+                      name: reference
+                      value: WTIKX
                     - type: INTEGER
                       name: show.0
-                      value: '2'
-                    - type: INTEGER
-                      name: show.1
-                      value: '3'
+                      value: '1'
                     - type: STRING
                       name: thresholds.0.color
-                      value: 4CAF50
+                      value: 43A047
                     - type: STRING
                       name: thresholds.0.threshold
                       value: '1'
-                    - type: INTEGER
-                      name: time_h_pos
-                      value: '2'
-                    - type: INTEGER
-                      name: time_v_pos
-                      value: '2'
-                    - type: INTEGER
-                      name: units_bold
-                      value: '0'
-                    - type: INTEGER
-                      name: units_show
-                      value: '0'
                 - type: svggraph
                   name: 'OpenVPN Client Traffic'
                   'y': '4'
-                  width: '38'
+                  width: '58'
                   height: '5'
                   fields:
                     - type: STRING
@@ -2763,141 +2758,10 @@ zabbix_export:
                     - type: INTEGER
                       name: righty
                       value: '0'
-                - type: item
-                  name: 'OpenVPN Client VPN IP'
-                  x: '17'
-                  'y': '2'
-                  width: '8'
-                  height: '1'
-                  hide_header: 'YES'
-                  fields:
-                    - type: INTEGER
-                      name: desc_h_pos
-                      value: '0'
-                    - type: INTEGER
-                      name: desc_size
-                      value: '25'
-                    - type: INTEGER
-                      name: desc_v_pos
-                      value: '0'
-                    - type: ITEM
-                      name: itemid.0
-                      value:
-                        host: 'IPFire OpenVPN Client by Zabbix agent'
-                        key: ipfire.ovpn.routing_table.virtual_address
-                    - type: INTEGER
-                      name: show.0
-                      value: '1'
-                    - type: INTEGER
-                      name: show.1
-                      value: '2'
-                    - type: INTEGER
-                      name: units_bold
-                      value: '0'
-                    - type: INTEGER
-                      name: value_size
-                      value: '50'
-                    - type: INTEGER
-                      name: value_v_pos
-                      value: '2'
-                - type: item
-                  name: 'OpenVPN Client Remote IP'
-                  x: '17'
-                  'y': '3'
-                  width: '8'
-                  height: '1'
-                  hide_header: 'YES'
-                  fields:
-                    - type: INTEGER
-                      name: desc_h_pos
-                      value: '0'
-                    - type: INTEGER
-                      name: desc_size
-                      value: '25'
-                    - type: INTEGER
-                      name: desc_v_pos
-                      value: '0'
-                    - type: ITEM
-                      name: itemid.0
-                      value:
-                        host: 'IPFire OpenVPN Client by Zabbix agent'
-                        key: ipfire.ovpn.client.real_address
-                    - type: INTEGER
-                      name: show.0
-                      value: '1'
-                    - type: INTEGER
-                      name: show.1
-                      value: '2'
-                    - type: INTEGER
-                      name: units_bold
-                      value: '0'
-                    - type: INTEGER
-                      name: value_size
-                      value: '50'
-                    - type: INTEGER
-                      name: value_v_pos
-                      value: '2'
-                - type: item
-                  name: 'OpenVPN Client: Last connection time'
-                  x: '25'
-                  'y': '2'
-                  width: '19'
-                  hide_header: 'YES'
-                  fields:
-                    - type: INTEGER
-                      name: decimal_size
-                      value: '25'
-                    - type: INTEGER
-                      name: desc_h_pos
-                      value: '0'
-                    - type: INTEGER
-                      name: desc_v_pos
-                      value: '0'
-                    - type: ITEM
-                      name: itemid.0
-                      value:
-                        host: 'IPFire OpenVPN Client by Zabbix agent'
-                        key: ipfire.ovpn.client.connected_since
-                    - type: INTEGER
-                      name: show.0
-                      value: '1'
-                    - type: INTEGER
-                      name: show.1
-                      value: '2'
-                    - type: INTEGER
-                      name: show.2
-                      value: '3'
-                    - type: INTEGER
-                      name: time_h_pos
-                      value: '2'
-                    - type: INTEGER
-                      name: time_v_pos
-                      value: '2'
-                    - type: INTEGER
-                      name: units_size
-                      value: '25'
-                    - type: INTEGER
-                      name: value_size
-                      value: '35'
-                - type: item
-                  name: 'OpenVPN Client Common name'
-                  x: '28'
-                  width: '27'
-                  hide_header: 'YES'
-                  fields:
-                    - type: ITEM
-                      name: itemid.0
-                      value:
-                        host: 'IPFire OpenVPN Client by Zabbix agent'
-                        key: ipfire.ovpn.client.commonname
-                    - type: INTEGER
-                      name: show.0
-                      value: '2'
                 - type: itemhistory
                   name: 'OpenVPN Client certificate details'
-                  x: '38'
-                  'y': '4'
-                  width: '34'
+                  'y': '9'
+                  width: '72'
                   height: '5'
                   fields:
                     - type: ITEM
@@ -2991,10 +2855,204 @@ zabbix_export:
                       name: time_period.to
                       value: now
                 - type: item
-                  name: 'OpenVPN Client: Last activity'
-                  x: '44'
+                  name: 'OpenVPN Client VPN IP'
+                  x: '6'
                   'y': '2'
-                  width: '17'
+                  width: '8'
+                  height: '1'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: desc_h_pos
+                      value: '0'
+                    - type: INTEGER
+                      name: desc_size
+                      value: '25'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire OpenVPN Client by Zabbix agent'
+                        key: ipfire.ovpn.routing_table.virtual_address
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: INTEGER
+                      name: show.1
+                      value: '2'
+                    - type: INTEGER
+                      name: units_bold
+                      value: '0'
+                    - type: INTEGER
+                      name: value_size
+                      value: '50'
+                    - type: INTEGER
+                      name: value_v_pos
+                      value: '2'
+                - type: item
+                  name: 'OpenVPN Client Remote IP'
+                  x: '6'
+                  'y': '3'
+                  width: '8'
+                  height: '1'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: desc_h_pos
+                      value: '0'
+                    - type: INTEGER
+                      name: desc_size
+                      value: '25'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire OpenVPN Client by Zabbix agent'
+                        key: ipfire.ovpn.client.real_address
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: INTEGER
+                      name: show.1
+                      value: '2'
+                    - type: INTEGER
+                      name: units_bold
+                      value: '0'
+                    - type: INTEGER
+                      name: value_size
+                      value: '50'
+                    - type: INTEGER
+                      name: value_v_pos
+                      value: '2'
+                - type: topitems
+                  name: 'Client Location: Country'
+                  x: '14'
+                  'y': '2'
+                  width: '10'
+                  height: '1'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: columns.0.display_value_as
+                      value: '2'
+                    - type: STRING
+                      name: columns.0.items.0
+                      value: 'Client Endpoint Location: Country'
+                    - type: INTEGER
+                      name: host_ordering_limit
+                      value: '1'
+                    - type: INTEGER
+                      name: item_ordering_limit
+                      value: '2'
+                    - type: INTEGER
+                      name: item_ordering_order_by
+                      value: '2'
+                    - type: INTEGER
+                      name: layout
+                      value: '1'
+                    - type: INTEGER
+                      name: problems
+                      value: '2'
+                    - type: INTEGER
+                      name: show_column_header
+                      value: '0'
+                - type: topitems
+                  name: 'Client Location: AS'
+                  x: '14'
+                  'y': '3'
+                  width: '10'
+                  height: '1'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: columns.0.display_value_as
+                      value: '2'
+                    - type: STRING
+                      name: columns.0.items.0
+                      value: 'Client Endpoint Location: AS'
+                    - type: INTEGER
+                      name: host_ordering_limit
+                      value: '1'
+                    - type: INTEGER
+                      name: item_ordering_limit
+                      value: '2'
+                    - type: INTEGER
+                      name: item_ordering_order_by
+                      value: '2'
+                    - type: INTEGER
+                      name: layout
+                      value: '1'
+                    - type: INTEGER
+                      name: problems
+                      value: '2'
+                    - type: INTEGER
+                      name: show_column_header
+                      value: '0'
+                - type: item
+                  name: 'OpenVPN Client: Last connection time'
+                  x: '24'
+                  'y': '2'
+                  width: '18'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: decimal_size
+                      value: '25'
+                    - type: INTEGER
+                      name: desc_h_pos
+                      value: '0'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire OpenVPN Client by Zabbix agent'
+                        key: ipfire.ovpn.client.connected_since
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: INTEGER
+                      name: show.1
+                      value: '2'
+                    - type: INTEGER
+                      name: show.2
+                      value: '3'
+                    - type: INTEGER
+                      name: time_h_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: time_v_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: units_size
+                      value: '25'
+                    - type: INTEGER
+                      name: value_size
+                      value: '35'
+                - type: item
+                  name: 'OpenVPN Client Common name'
+                  x: '35'
+                  width: '31'
+                  hide_header: 'YES'
+                  fields:
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire OpenVPN Client by Zabbix agent'
+                        key: ipfire.ovpn.client.commonname
+                    - type: INTEGER
+                      name: show.0
+                      value: '2'
+                - type: item
+                  name: 'OpenVPN Client: Last activity'
+                  x: '42'
+                  'y': '2'
+                  width: '18'
                   hide_header: 'YES'
                   fields:
                     - type: INTEGER
@@ -3032,6 +3090,148 @@ zabbix_export:
                     - type: INTEGER
                       name: value_size
                       value: '35'
+                - type: piechart
+                  name: 'Client Last connection Total traffic'
+                  x: '58'
+                  'y': '4'
+                  width: '14'
+                  height: '5'
+                  fields:
+                    - type: STRING
+                      name: ds.0.color.0
+                      value: 03A9F4
+                    - type: STRING
+                      name: ds.0.color.1
+                      value: 673AB7
+                    - type: INTEGER
+                      name: ds.0.dataset_type
+                      value: '0'
+                    - type: ITEM
+                      name: ds.0.itemids.0
+                      value:
+                        host: 'IPFire OpenVPN Client by Zabbix agent'
+                        key: ipfire.ovpn.client.bytes_out_total
+                    - type: ITEM
+                      name: ds.0.itemids.1
+                      value:
+                        host: 'IPFire OpenVPN Client by Zabbix agent'
+                        key: ipfire.ovpn.client.bytes_in_total
+                    - type: INTEGER
+                      name: ds.0.type.0
+                      value: '0'
+                    - type: INTEGER
+                      name: ds.0.type.1
+                      value: '0'
+                    - type: INTEGER
+                      name: legend_lines
+                      value: '2'
+                    - type: INTEGER
+                      name: legend_value
+                      value: '1'
+                    - type: STRING
+                      name: time_period.from
+                      value: now-1y
+                    - type: STRING
+                      name: time_period.to
+                      value: now
+                - type: item
+                  name: 'OpenVPN Client Last connection duration'
+                  x: '60'
+                  'y': '2'
+                  width: '12'
+                  hide_header: 'YES'
+                  fields:
+                    - type: INTEGER
+                      name: decimal_places
+                      value: '0'
+                    - type: INTEGER
+                      name: desc_h_pos
+                      value: '0'
+                    - type: INTEGER
+                      name: desc_v_pos
+                      value: '0'
+                    - type: ITEM
+                      name: itemid.0
+                      value:
+                        host: 'IPFire OpenVPN Client by Zabbix agent'
+                        key: ipfire.ovpn.client.connection.duration
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: INTEGER
+                      name: show.1
+                      value: '2'
+                    - type: INTEGER
+                      name: show.2
+                      value: '3'
+                    - type: INTEGER
+                      name: time_h_pos
+                      value: '2'
+                    - type: INTEGER
+                      name: time_v_pos
+                      value: '2'
+                    - type: STRING
+                      name: units
+                      value: s
+                    - type: INTEGER
+                      name: units_bold
+                      value: '0'
+                - type: honeycomb
+                  name: 'Client Access status'
+                  x: '66'
+                  width: '6'
+                  hide_header: 'YES'
+                  fields:
+                    - type: STRING
+                      name: bg_color
+                      value: EF5350
+                    - type: STRING
+                      name: items.0
+                      value: 'Client Access status'
+                    - type: INTEGER
+                      name: primary_label_decimal_places
+                      value: '0'
+                    - type: INTEGER
+                      name: primary_label_type
+                      value: '1'
+                    - type: INTEGER
+                      name: primary_label_units_show
+                      value: '0'
+                    - type: STRING
+                      name: reference
+                      value: GSNRJ
+                    - type: INTEGER
+                      name: show.0
+                      value: '1'
+                    - type: STRING
+                      name: thresholds.0.color
+                      value: 43A047
+                    - type: STRING
+                      name: thresholds.0.threshold
+                      value: '1'
+      valuemaps:
+        - uuid: 87dfebb2a9784886b12efe44d8044ee3
+          name: 'OpenVPN Client access status'
+          mappings:
+            - value: '0'
+              newvalue: disabled
+            - value: '1'
+              newvalue: enabled
+        - uuid: 142e2748979147cb8b8f887825575a72
+          name: 'OpenVPN Client type'
+          mappings:
+            - value: host
+              newvalue: Roadwarior
+            - type: REGEXP
+              value: '^net.*'
+              newvalue: 'Remote network'
+        - uuid: 486bcaed8ba049c7b9b7c811482b6ad8
+          name: 'OpenVPN Connection state'
+          mappings:
+            - value: '0'
+              newvalue: 'not connected'
+            - value: '1'
+              newvalue: connected
                 - type: item
                   name: 'OpenVPN Client State'
                   x: '55'
