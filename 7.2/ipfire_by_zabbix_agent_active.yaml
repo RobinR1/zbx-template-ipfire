@@ -24,7 +24,7 @@ zabbix_export:
         Created by Robin Roevens (robin.roevens (at) disroot.org)
       vendor:
         name: RobinR1
-        version: 7.2-0.7
+        version: 7.2-197.0
       groups:
         - name: Templates/Applications
       items:
@@ -2109,7 +2109,7 @@ zabbix_export:
         This template is applied to discovered OpenVPN client hosts by the template IPFire by Zabbix agent and is not meant to be applied manually to any hosts.
       vendor:
         name: RobinR1
-        version: 7.2-0.7
+        version: 7.2-197.0
       groups:
         - name: Templates/Modules
       items:
@@ -3309,6 +3309,9 @@ zabbix_export:
         Monitor an IPFire WireGuard peer
         
         This template is applied to discovered WireGuard peer hosts by the template IPFire by Zabbix agent and is not meant to be applied manually to any hosts.
+      vendor:
+        name: RobinR1
+        version: 7.2-197.0
       groups:
         - name: Templates/Modules
       items:
