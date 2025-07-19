@@ -14,6 +14,7 @@ Supports monitoring of:
 - Pakfire status (Installed version, Available update(s))
 - Network stats (Line quality, Open Connections, Firewall hits)
 - OpenVPN clients and stats (OpenVPN client discovery, OpenVPN client properties, Traffic stats, Client/Server/CA Certificate validation)
+- WireGuard peers and stats (WireGuard peer discovery, WireGuard client properties, Traffic stats)
 - IPS throughput stats (Scanned, Bypassed, Whitelisted)
 - Guardian blocked IPs (count)
 
@@ -21,7 +22,7 @@ Use in conjunction with a default Template OS Linux-template for CPU/Memory/Stor
 
 This template was created for:
 
-- IPFire 2.29 - Core update 191
+- IPFire 2.29 - Core update 197
 
 **Warning**: This template will *NOT* work on earlier versions of IPFire.
 
@@ -60,6 +61,9 @@ Note on usage of the Zabbix default Linux by Zabbix agent (active) template: the
 |{$IPFIRE.OVPN.COMMONNAME.NOTMATCHES} |<p>OpenVPN clients with common name matching this regex will not be discovered</p>|`CHANGE_IF_NEEDED` |
 |{$IPFIRE.OVPN.STATE.MATCHES} |<p>OpenVPN clients with a state (on/off) matching this regex will be discovered.</p>|`on` |
 |{$IPFIRE.OVPN.CERT.EXPIRY.WARN} |<p>Number of days until the OpenVPN server or CA certificate expires.</p>|`7` |
+|{$IPFIRE.WIREGUARD.NAME.MATCHES} |<p>WireGuard peers with name matching this regex will be discovered</p>|`^.*$` |
+|{$IPFIRE.WIREGUARD.NAME.NOTMATCHES} |<p>WireGuard peers with common name matching this regex will not be discovered</p>|`CHANGE_IF_NEEDED` |
+|{$IPFIRE.WIREGUARD.STATE.MATCHES} |<p>WireGuard peers with a state (on/off) matching this regex will be discovered.</p>|`on` |
 
 #### Notes about $IPFIRE.SERVICE.TRIGGER
 This template does not 'detect' if you have manually disabled a service in IPFire, so by default it will alarm you when any service is down. This is done on purpose so that you will also be notified if a service is unintentionly disabled.
@@ -71,11 +75,13 @@ For example to disable the OpenVPN service trigger add `{$IPFIRE.SERVICE.TRIGGER
 Or you could opt to use the variables `{$IPFIRE.SERVICENAME.MATCHES}` and/or `{$IPFIRE.SERVICENAME.NOT_MATCHES}` to filter out services
 you don't want to be monitored at all.
 
-#### OpenVPN Client discovery
-This template is actually a set of 2 and includes a second template `IPFire OpenVPN Client by Zabbix agent` specificaly for use by the OpenVPN Client discovery defined in the main template `IPFire by Zabbix agent active`.
+#### OpenVPN Client / WireGuard Peer discovery
+This template is actually a set of templates and includes a template `IPFire OpenVPN Client by Zabbix agent` specificaly for use by the OpenVPN Client discovery and a template `IPFire WireGuard Client by Zabbix agent`, for use by the WireGuard Client discovery, both defined in the main template `IPFire by Zabbix agent active`.
 
 If the OpenVPN Service of the IPFire instance is enabled, the main template will discover any configured OpenVPN clients (see `{$IPFIRE.OVPN.*}` macro's to set filters), create those as new hosts in Zabbix and link the `IPFire OpenVPN Client by Zabbix agent` template to them.
-Those client hosts will then start collecting OpenVPN statistics specific to those clients.
+In the same manner, the main template will discover any configured WireGuard clients (see `{$IPFIRE.WIREGUARD.*}` macro's to set filters) and also create new hosts in Zabbix for each configured peer in IPFire and link the `IPFire WireGuard Client by Zabbix agent` template to it. There is no WireGuard service as it is a kernel feature, so there is no WireGuard service monitoring.
+
+Those discovered client hosts will start collecting OpenVPN or WireGuard statistics specific to those clients.
 
 ## Credits
 
