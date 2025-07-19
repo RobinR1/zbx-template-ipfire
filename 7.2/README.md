@@ -22,7 +22,7 @@ Use in conjunction with a default Template OS Linux-template for CPU/Memory/Stor
 
 This template was created for:
 
-- IPFire 2.29 - Core update 191
+- IPFire 2.29 - Core update 197
 
 **Warning**: This template will *NOT* work on earlier versions of IPFire.
 
@@ -81,8 +81,7 @@ This template is actually a set of templates and includes a template `IPFire Ope
 If the OpenVPN Service of the IPFire instance is enabled, the main template will discover any configured OpenVPN clients (see `{$IPFIRE.OVPN.*}` macro's to set filters), create those as new hosts in Zabbix and link the `IPFire OpenVPN Client by Zabbix agent` template to them.
 In the same manner, the main template will discover any configured WireGuard clients (see `{$IPFIRE.WIREGUARD.*}` macro's to set filters) and also create new hosts in Zabbix for each configured peer in IPFire and link the `IPFire WireGuard Client by Zabbix agent` template to it. There is no WireGuard service as it is a kernel feature, so there is no WireGuard service monitoring.
 
-Those discoveredclient hosts will start collecting OpenVPN or WireGuard statistics specific to those clients.
-
+Those discovered client hosts will start collecting OpenVPN or WireGuard statistics specific to those clients.
 
 ## Credits
 
