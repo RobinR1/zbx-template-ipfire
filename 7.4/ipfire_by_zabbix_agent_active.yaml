@@ -2288,7 +2288,7 @@ zabbix_export:
               error_handler: DISCARD_VALUE
             - type: REGEX
               parameters:
-                - '^(\d+\.\d+\.\d+\.\d+):\d+$'
+                - '^(?:.+:)?(\d+\.\d+\.\d+\.\d+):\d+$'
                 - \1
               error_handler: DISCARD_VALUE
             - type: DISCARD_UNCHANGED_HEARTBEAT
