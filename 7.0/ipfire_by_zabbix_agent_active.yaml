@@ -2103,7 +2103,7 @@ zabbix_export:
         This template is applied to discovered OpenVPN client hosts by the template IPFire by Zabbix agent and is not meant to be applied manually to any hosts.
       vendor:
         name: RobinR1
-        version: 7.0-197.0
+        version: 7.0-197.1
       groups:
         - name: Templates/Modules
       items:
@@ -2296,7 +2296,7 @@ zabbix_export:
               error_handler: DISCARD_VALUE
             - type: REGEX
               parameters:
-                - '^(\d+\.\d+\.\d+\.\d+):\d+$'
+                - '^(?:.+:)?(\d+\.\d+\.\d+\.\d+):\d+$'
                 - \1
               error_handler: DISCARD_VALUE
             - type: DISCARD_UNCHANGED_HEARTBEAT
